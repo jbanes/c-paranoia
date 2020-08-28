@@ -7,6 +7,12 @@
 
    This is a public domain adventure and may not be sold for profit */
 
+#include<stdlib.h>
+#include <stdio.h>
+#include <time.h>
+
+#include "paranoia.h"
+
 #define MOXIE	13
 #define AGILITY	15
 #define MAXKILL  7	/* The maximum number of UV's you can kill */
@@ -30,7 +36,7 @@ char get_char()
 	return c;
 }
 
-more()
+void more()
 {
 	printf("---------- More ----------");
 #ifdef DEBUG
@@ -44,8 +50,7 @@ more()
 	};
 }
 
-new_clone(resume)
-int resume;
+int new_clone(int resume)
 {
 	printf("\nClone %d just died.\n",clone);
 	if (++clone>6)
@@ -64,15 +69,14 @@ int resume;
 	}
 }
 
-dice_roll(number,faces)
-int number, faces;
+int dice_roll(int number, int faces)
 {
 	int i,total=0;
 	for(i=number;i>0;i--)	total+= rand()%faces+1;
 	return total;
 }
 
-instructions()
+void instructions()
 {
 	printf("\n\n\n\nWelcome to Paranoia!\n\n");
 	printf("HOW TO PLAY:\n\n");
@@ -93,7 +97,7 @@ instructions()
 	printf("  If not, you can try again later.\n");
 }
 
-character()
+void character()
 {
 	printf("===============================================================================\n");
 	printf("The Character : Philo-R-DMD %d\n", clone);
@@ -119,9 +123,7 @@ character()
 	printf("===============================================================================\n");
 }
 
-choose(a,aptr,b,bptr)
-int a,b;
-char *aptr, *bptr;
+int choose(int a, char *aptr, int b, char *bptr)
 {
 	printf("\nSelect \'a\' or \'b\' :\n");
 	printf(" a - %s.\n b - %s.\n", aptr, bptr);
@@ -129,7 +131,7 @@ char *aptr, *bptr;
 	else	 		return b;
 }
 
-page1()
+int page1()
 {
 	printf("  You wake up face down on the red and pink checked E-Z-Kleen linoleum floor.\n");
 	printf("  You recognise the pattern, it\'s the type preferred in the internal security\nbriefing cells.  When you finally look around you, you see that you are alone\n");
@@ -137,7 +139,7 @@ page1()
 	return 57;
 }
 
-page2()
+int page2()
 {
 	printf("\"Greetings,\" says the kindly Internal Security self incrimination expert who\n");
 	printf("meets you at the door, \"How are we doing today?\"  He offers you a doughnut\n");
@@ -155,7 +157,7 @@ page2()
 	else 			 return new_clone(32);
 }
 
-page3()
+int page3()
 {
 	printf("You walk to the nearest Computer terminal and request more information about\n");
 	printf("Christmas.  The Computer says, \"That is an A-1 ULTRAVIOLET ONLY IMMEDIATE\n");
@@ -163,7 +165,7 @@ page3()
 	return choose(4,"You give your correct clearance",5,"You lie and claim Ultraviolet clearance");
 }
 
-page4()
+int page4()
 {
 	printf("\"That is classified information, Troubleshooter, thank you for your inquiry.\n");
 	printf(" Please report to an Internal Security self incrimination station as soon as\n");
@@ -171,7 +173,7 @@ page4()
 	return 9;
 }
 
-page5()
+int page5()
 {
 	printf("The computer says, \"Troubleshooter, you are not wearing the correct colour\n");
 	printf("uniform.  You must put on an Ultraviolet uniform immediately.  I have seen to\n");
@@ -182,7 +184,7 @@ page5()
 	return choose(6, "You open the package and put on the uniform", 7, "You finally come to your senses and run for it");
 }
 
-page6()
+int page6()
 {
 	printf("The uniform definitely makes you look snappy and pert.  It really looks\n");
 	printf("impressive, and even has the new lopsided lapel fashion that you admire so\n");
@@ -194,7 +196,7 @@ page6()
 	return 8;
 }
 
-page7()
+int page7()
 {
 	printf("The corridor lights dim and are replaced by red battle lamps as the Security\n");
 	printf("Breach alarms howl all around you.  You run headlong down the corridor and\n");
@@ -221,7 +223,7 @@ page7()
 	return 8;
 }
 
-page8()
+int page8()
 {
 	printf("\"Now, about your question, citizen.  Christmas was an old world marketing ploy\n");
 	printf("to induce lower clearance citizens to purchase vast quantities of goods, thus\n");
@@ -238,7 +240,7 @@ page8()
 	return 10;
 }
 
-page9()
+int page9()
 {
 	int choice;
 	printf("As you walk toward the tubecar that will take you to GDH7-beta, you pass one\n");
@@ -251,7 +253,7 @@ page9()
 	return choice;
 }
 
-page10()
+int page10()
 {
 	int choice;
 	printf("You stroll briskly down the corridor, up a ladder, across an unrailed catwalk,\n");
@@ -279,7 +281,7 @@ page10()
 	}
 }
 
-page11()
+int page11()
 {
 	printf("The printing on the folder says \"Experimental Self Briefing.\"\n");
 	printf("You open it and begin to read the following:\n");
@@ -310,7 +312,7 @@ page11()
 	return choose(3,"You wish to ask The Computer for more information about Christmas",10,"You have decided to go directly to Goods Distribution Hall 7-beta");
 }
 
-page12()
+int page12()
 {
 	printf("You walk up to the door and push the button labelled \"push to exit.\"\n");
 	printf("Within seconds a surly looking guard shoves his face into the small plexiglass\n");
@@ -322,7 +324,7 @@ page12()
 	return choose(11,"You sit down at the table and read the Orange packet",57,"You stare around the room some more");
 }
 
-page13()
+int page13()
 {
 	printf("You step into the shiny plasteel tubecar, wondering why the shape has always\n");
 	printf("reminded you of bullets.  The car shoots forward the instant your feet touch\n");
@@ -335,7 +337,7 @@ page13()
 	return 14;
 }
 
-page14()
+int page14()
 {
 	printf("You manage to pull yourself out of the tubecar and look around.  Before you is\n");
 	printf("one of the most confusing things you have ever seen, a hallway that is\n");
@@ -349,7 +351,7 @@ page14()
 	return 22;
 }
 
-page15()
+int page15()
 {
 	printf("You are set upon by a runty robot with a queer looking face and two pointy\n");
 	printf("rubber ears poking from beneath a tattered cap.  \"Hey mister,\" it says,\n");
@@ -373,7 +375,7 @@ page15()
 	}
 }
 
-page16()
+int page16()
 {
 	printf("The doll is a good buy for fifty credits; it will make a fine Christmas present\n");
 	printf("for one of your friends.  After the sale the robot rolls away.  You can use\n");
@@ -384,7 +386,7 @@ page16()
 	return 22;
 }
 
-page17()
+int page17()
 {
 	int i, robot_hp=15;
 	printf("You whip out your laser and shoot the robot, but not before it squeezes the\n");
@@ -421,7 +423,7 @@ page17()
 	return 22;
 }
 
-page18()
+int page18()
 {
 	printf("You walk to the centre of the hall, ogling like an infrared fresh from the\n");
 	printf("clone vats.  Towering before you is the most unearthly thing you have ever\n");
@@ -437,7 +439,7 @@ page18()
 	else				return 20;
 }
 
-page19()
+int page19()
 {
 	printf("Quickly you regain your balance, whirl and fire your laser into the Ultraviolet\n");
 	printf("citizen behind you.  For a moment your heart leaps to your throat, then you\n");
@@ -450,7 +452,7 @@ page19()
 	return choose(34,"You search the body, keeping an eye open for Internal Security",22,"You run away like the cowardly dog you are");
 }
 
-page20()
+int page20()
 {
 	printf("Oh no! you can\'t keep your balance.  You\'re falling, falling head first into\n");
 	printf("the Christmas beast\'s gaping maw.  It\'s a valiant struggle; you think you are\n");
@@ -462,7 +464,7 @@ page20()
 	return 22;
 }
 
-page21()
+int page21()
 {
 	printf("You have been wasting the leading citizens of Alpha Complex at a prodigious\n");
 	printf("rate.  This has not gone unnoticed by the Internal Security squad at GDH7-beta.\n");
@@ -471,7 +473,7 @@ page21()
 	return new_clone(45);
 }
 
-page22()
+int page22()
 {
 	printf("You are searching Goods Distribution Hall 7-beta.\n");
 	switch(dice_roll(1,4))
@@ -483,7 +485,7 @@ page22()
 	}
 }
 
-page23()
+int page23()
 {
 	printf("You go to the nearest computer terminal and declare yourself a mutant.\n");
 	printf("\"A mutant, he\'s a mutant,\" yells a previously unnoticed infrared who had\n");
@@ -492,7 +494,7 @@ page23()
 	return choose(28,"You tell them that it was really only a bad joke",24,"You want to fight it out, one against twelve");
 }
 
-page24()
+int page24()
 {
 	printf("Golly, I never expected someone to pick this.  I haven\'t even designed\n");
 	printf("the 12 citizens who are going to make a sponge out of you.  Tell you what,\n");
@@ -500,7 +502,7 @@ page24()
 	return choose(28,"You change your mind and say it was only a bad joke",25,"You REALLY want to shoot it out");
 }
 
-page25()
+int page25()
 {
 	printf("Boy, you really can\'t take a hint!\n");
 	printf("They\'re closing in.  Their trigger fingers are twitching, they\'re about to\n");
@@ -508,7 +510,7 @@ page25()
 	return choose(28,"You tell them it was all just a bad joke",26,"You are going to shoot");
 }
 
-page26()
+int page26()
 {
 	printf("You can read the cold, sober hatred in their eyes (They really didn\'t think\n");
 	printf("it was funny), as they tighten the circle around you.  One of them shoves a\n");
@@ -518,19 +520,19 @@ page26()
 	return new_clone(32);
 }
 
-page27()
+int page27()
 {
 	/* doesn't exist.  Can't happen with computer version.
 	   designed to catch dice cheats */
 }
 
-page28()
+int page28()
 {
 	printf("They don\'t think it\'s funny.\n");
 	return 26;
 }
 
-page29()
+int page29()
 {
 	printf("\"Psst, hey citizen, come here.  Pssfft,\" you hear.  When you peer around\n");
 	printf("you can see someone\'s dim outline in the shadows.  \"I got some information\n");
@@ -548,7 +550,7 @@ page29()
 	}
 }
 
-page30()
+int page30()
 {
 	printf("You step into the shadows and offer the man a thirty credit bill.  \"Just drop\n");
 	printf("it on the floor,\" he says.  \"So you\'re looking for the Master Retailer, pssfft?\n");
@@ -575,7 +577,7 @@ page30()
 	}
 }
 
-page31()
+int page31()
 {
 	printf("Like any good troubleshooter you make the least expensive decision and threaten\n");
 	printf("him for information.  With lightning like reflexes you whip out your laser and\n");
@@ -588,7 +590,7 @@ page31()
 	return choose(30,"You pay the 30 credits",22,"You pssfft go away stupid");
 }
 
-page32()
+int page32()
 {
 	printf("Finally it\'s your big chance to prove that you\'re as good a troubleshooter\n");
 	printf("as your previous clone.  You walk briskly to mission briefing and pick up your\n");
@@ -598,7 +600,7 @@ page32()
 	return 22;
 }
 
-page33()
+int page33()
 {
 	blast_door=1;
 	printf("You release the megabolts on the blast door, then strain against it with your\n");
@@ -611,7 +613,7 @@ page33()
 	else			return 36;
 }
 
-page34()
+int page34()
 {
 	printf("You have found a sealed envelope on the body.  You open it and read:\n");
 	printf("\"WARNING: Ultraviolet Clearance ONLY.  DO NOT READ.\n");
@@ -639,7 +641,7 @@ page34()
 	return choose(46,"You rush off to the nearest computer terminal to expose the commies",22,"You wander off to look for more evidence");
 }
 
-page35()
+int page35()
 {
 	printf("\"Oh master,\" you hear through the gun barrel, \"where have you been? It is\n");
 	printf("time for the great Christmas gifting ceremony.  You had better hurry and get\n");
@@ -658,7 +660,7 @@ page35()
 	return new_clone(32);
 }
 
-page36()
+int page36()
 {
 	printf("\"Congratulations, troubleshooter, you have successfully found the lair of the\n");
 	printf("Master Retailer and completed the Troubleshooter Training Course test mission,\"\n");
@@ -681,7 +683,7 @@ page36()
 	}
 }
 
-page37()
+int page37()
 {
 	printf("\"Come with me please, Troubleshooter,\" says the Green clearance technician\n");
 	printf("after he has dislodged your head from the cannon.  \"You have been participating\n");
@@ -697,7 +699,7 @@ page37()
 	return 38;
 }
 
-page38()
+int page38()
 {
 	printf("\"I am Plato-B-PHI%d, head of mutant propaganda here at the training course.\n",plato_clone);
 	printf("If you have any questions about mutants please come to me.  Today I will be\n");
@@ -714,7 +716,7 @@ page38()
 	return choose(39,"You volunteer for the test",40,"You duck behind a chair and hope the instructor doesn\'t notice you");
 }
 
-page39()
+int page39()
 {
 	printf("You bravely volunteer to test the mutant detection gun.  You stand up and walk\n");
 	printf("down the steps to the podium, passing a very relieved Troubleshooter along the\n");
@@ -732,12 +734,12 @@ page39()
 	return 41;
 }
 
-page40()
+int page40()
 {
 	printf("You breathe a sigh of relief as Plato-B-PHI picks on the other Troubleshooter.\n");
 	printf("\"You down here in the front,\" says the instructor pointing at the other\n");
 	printf("Troubleshooter, \"you\'ll make a good volunteer.  Please step forward.\"\n");
-	printf("The Troubleshooter looks around with a \`who me?\' expression on his face, but\n");
+	printf("The Troubleshooter looks around with a \'who me?\' expression on his face, but\n");
 	printf("since he is the only one visible in the audience he figures his number is up.\n");
 	printf("He walks down to the podium clutching his Action Troubleshooter(tm) doll before\n");
 	printf("him like a weapon.  \"Here,\" says Plato-B-PHI, \"take the mutant detection ray\n");
@@ -764,7 +766,7 @@ page40()
 	}
 }
 
-page41()
+int page41()
 {
 	printf("You stumble down the hallway of the Troubleshooter Training Course looking for\n");
 	printf("your next class.  Up ahead you see one of the instructors waving to you.  When\n");
@@ -778,7 +780,7 @@ page41()
 	return choose(42,"You respond with the proper Illuminati code phrase, \"Ewige Blumenkraft\"",43,"You ignore this secret society contact");
 }
 
-page42()
+int page42()
 {
 	printf("\"Aha, so you are a member of the elitist Illuminati secret society,\" he says\n");
 	printf("loudly, \"that is most interesting.\"  He turns to the large class already\n");
@@ -788,7 +790,7 @@ page42()
 	return choose(51,"You run for it",52,"You wait for the guard");
 }
 
-page43()
+int page43()
 {
 	printf("You sit through a long lecture on how to recognise and infiltrate secret\n");
 	printf("societies, with an emphasis on mimicking secret handshakes.  The basic theory,\n");
@@ -804,7 +806,7 @@ page43()
 	return choose(44,"You go looking for a computer terminal",55,"You go to the graduation ceremony immediately");
 }
 
-page44()
+int page44()
 {
 	printf("You walk down to a semi-secluded part of the training course complex and\n");
 	printf("activate a computer terminal.  \"AT YOUR SERVICE\" reads the computer screen.\n");
@@ -822,7 +824,7 @@ page44()
 	}
 }
 
-page45()
+int page45()
 {
 	printf("\"Hrank Hrank,\" snorts the alarm in your living quarters.  Something is up.\n");
 	printf("You look at the monitor above the bathroom mirror and see the message you have\n");
@@ -836,7 +838,7 @@ page45()
 	return 10;
 }
 
-page46()
+int page46()
 {
 	printf("\"Why do you ask about the communists, Troubleshooter?  It is not in the\n");
 	printf("interest of your continued survival to be asking about such topics,\" says\n");
@@ -844,7 +846,7 @@ page46()
 	return choose(53,"You insist on talking about the communists",54,"You change the subject");
 }
 
-page47()
+int page47()
 {
 	printf("The Computer orders the entire Vulture squadron to terminate the Troubleshooter\n");
 	printf("Training Course.  Unfortunately you too are terminated for possessing\n");
@@ -856,7 +858,7 @@ page47()
 	return 0;
 }
 
-page48()
+int page48()
 {
 	printf("The tubecar shoots forward as you enter, slamming you back into a pile of\n");
 	printf("garbage.  The front end rotates upward and you, the garbage and the garbage\n");
@@ -866,14 +868,14 @@ page48()
 	return new_clone(45);
 }
 
-page49()
+int page49()
 {
 	printf("The instructor drags your inert body into a specimen detainment cage.\n");
 	printf("\"He\'ll make a good subject for tomorrow\'s mutant dissection class,\" you hear.\n");
 	return new_clone(32);
 }
 
-page50()
+int page50()
 {
 	printf("You put down the other Troubleshooter, and then wisely decide to drill a few\n");
 	printf("holes in the instructor as well; the only good witness is a dead witness.\n");
@@ -882,27 +884,27 @@ page50()
 	return 41;
 }
 
-page51()
+int page51()
 {
 	printf("You run for it, but you don\'t run far.  Three hundred strange and exotic\n");
 	printf("weapons turn you into a freeze dried cloud of soot.\n");
 	return new_clone(32);
 }
 
-page52()
+int page52()
 {
 	printf("You wisely wait until the instructor returns with a Blue Internal Security\n");
 	printf("guard.  The guard leads you to an Internal Security self incrimination station.\n");
 	return 2;
 }
 
-page53()
+int page53()
 {
 	printf("You tell The Computer about:\n");
 	return choose(47,"The commies who have infiltrated the Troubleshooter Training Course\n     and the impending People\'s Revolution",54,"Something less dangerous");
 }
 
-page54()
+int page54()
 {
 	printf("\"Do not try to change the subject, Troubleshooter,\" says The Computer.\n");
 	printf("\"It is a serious crime to ask about the communists.  You will be terminated\n");
@@ -916,7 +918,7 @@ page54()
 	else		   return new_clone(32);
 }
 
-page55()
+int page55()
 {
 	printf("You and 300 other excited graduates are marched  from the lecture hall and into\n");
 	printf("a large auditorium for the graduation exercise.  The auditorium is\n");
@@ -944,7 +946,7 @@ page55()
 	return 0;
 }
 
-page56()
+int page56()
 {
 	printf("That familiar strange feeling of deja\'vu envelops you again.  It is hard to\n");
 	printf("say, but whatever is on the other side of the door does not seem to be intended\n");
@@ -952,15 +954,14 @@ page56()
 	return choose(33,"You open the door and step through",22,"You go looking for more information");
 }
 
-page57()
+int page57()
 {
 	printf("In the centre of the room is a table and a single chair.  There is an Orange\n");
 	printf("folder on the table top, but you can\'t make out the lettering on it.\n");
 	return choose(11,"You sit down and read the folder",12,"You leave the room");
 }
 
-next_page(this_page)
-int this_page;
+int next_page(int this_page)
 {
 	printf("\n");
 	switch (this_page)
@@ -1027,7 +1028,7 @@ int this_page;
 	}
 }
 
-main()
+void main()
 {
 	srand(time(0));
 	instructions();	more();
