@@ -1,3 +1,6 @@
 .DS_Store
 paranoia
 nbproject/**
+dist/**
+*.o
+*.dge

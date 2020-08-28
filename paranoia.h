@@ -10,6 +10,7 @@
 
 void character();
 int choose(int a, char *aptr, int b, char *bptr);
+void more();
 
 #endif /* PARANOIA_H */
 

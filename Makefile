@@ -1,14 +1,26 @@
-PROG=	paranoia
+PROG = paranoia
+OBJS = renderer.o
 
-DESTDIR	= /usr/local/bin
-CC	= gcc
-CFLAGS	= -O2
+ARCH = mipsel-linux-
+CC = $(ARCH)gcc
 
-$(PROG):
-	$(CC) $(CFLAGS) -o $(PROG) $(PROG).c
+SDL_CFLAGS  := $(shell sdl-config --cflags)
+SDL_LIBS    := $(shell sdl-config --libs)
+CFLAGS = $(SDL_CFLAGS) -O2
+LDFLAGS = $(SDL_LIBS)
 
-install: $(PROG)
-	install -c -o bin -g root -m 755 $(PROG) $(DESTDIR)
+
+.c.o:
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(PROG): $(OBJS)
+	$(CC) $(LDFLAGS) $(CFLAGS) $(OBJS) -o $(PROG).dge sdl-$(PROG).c
+	mv $(PROG).dge opk/
+	mkdir -p dist
+	rm -f dist/Paranoia.opk
+	mksquashfs opk/ dist/Paranoia.opk
+	rm opk/$(PROG).dge
 
 clean:
-	rm -f $(PROG) core *.o
+	rm -f $(PROG) $(PROG).dge core *.o
+	rm -Rf dist
