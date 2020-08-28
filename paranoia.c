@@ -7,7 +7,7 @@
 
    This is a public domain adventure and may not be sold for profit */
 
-#include<stdlib.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
 
