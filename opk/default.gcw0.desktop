@@ -5,4 +5,5 @@ Exec=paranoia.dge
 Terminal=false
 Type=Application
 StartupNotify=false
+Icon=paranoia
 Categories=games;
