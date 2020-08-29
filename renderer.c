@@ -188,7 +188,7 @@ uint16_t renderer_next_word_width(char* inString)
         if(*tempChar == ';') break;
     }
     
-    return (count * 4);
+    return (count * (font->width >> 4));
 }
 
 void renderer_font_print(gfx_cursor *cursor, char* inString) 

@@ -96,8 +96,14 @@ char get_char()
         if(event.key.keysym.sym == SDLK_SPACE)  return 'X';
         if(event.key.keysym.sym == SDLK_LSHIFT) return 'Y';
 
-        return ' '; // Didn't recognize the input
+        // Didn't recognize the input
     }
+}
+
+void clear()
+{
+    cursor.y = 0;
+    renderer_clear(0, 0, 0);
 }
 
 void more()
@@ -152,62 +158,67 @@ void instructions()
 {
 	print_text("Welcome to Paranoia!\n\n\n");
 	print_text("HOW TO PLAY:\n\n");
-	print_text("Just press <RETURN> until you are  ");
-	print_text("asked to make a choice. Select 'A'  ");
-	print_text("or 'B' or whatever for your choice,  ");
-	print_text("then press <RETURN>. You may select  ");
-	print_text("'X' at any time to get a display of  ");
-	print_text("your statistics. Always choose the  ");
-	print_text("least dangerous option.  Continue   ");
-	print_text("doing this until you win. At times  ");
-	print_text("you will use a skill or engage in ");
-	print_text("combat and and will be informed of ");
-	print_text("the outcome.  These sections will be ");
-	print_text("self explanatory.\n\n");
+	print_text("  Just press a button until you are asked to make a \n");
+	print_text("  choice.\n\n");
+	print_text("  Press 'A' or 'B' or whatever for your choice.\n\n");
+	print_text("  You may press 'X' at any time to get a display of \n");
+	print_text("  your statistics.\n\n");
+	print_text("  Always choose the least dangerous option. Continue\n");
+	print_text("  doing this until you win.\n\n");
+	print_text("  At times you will use a skill or engage in combat \n");
+	print_text("  and and will be informed of the outcome. These\n");
+	print_text("  sections will be self explanatory.\n\n");
+        more();
+        
+        print_text("Welcome to Paranoia!\n\n\n");
 	print_text("HOW TO DIE:\n\n");
-	print_text("As Philo-R-DMD you will die at times ");
-	print_text("during the adventure. When this ");
-	print_text("happens you will be given an new ");
-	print_text("clone at a particular location. The ");
-	print_text("new Philo-R will usually have to ");
-	print_text("retrace some of the old Philo-R\'s ");
-	print_text("path; hopefully he won\'t make the ");
-	print_text("same mistake as his predecessor.\n\n");
+	print_text("  As Philo-R-DMD you will die at times during the \n");
+	print_text("  adventure. When this happens you will be given \n");
+	print_text("  an new clone at a particular location.\n\n");
+	print_text("  The new Philo-R will usually have to retrace some\n");
+	print_text("  of the old Philo-R\'s path; hopefully he won\'t\n");
+	print_text("  make the same mistake as his predecessor.\n\n");
 	print_text("HOW TO WIN:\n\n");
-	print_text("Simply complete the mission before you ");
-	print_text("expend all six clones. ");
-	print_text("If you make it, congratulations. ");
-	print_text("If not, you can try again later. ");
+	print_text("  Simply complete the mission before you expend all\n");
+	print_text("  six clones.\n\n");
+	print_text("  If you make it, congratulations.\n\n");
+	print_text("  If not, you can try again later.");
 }
 
 void character()
 {
     char player[40];
     
-    sprintf(player, "The Character : Philo-R-DMD %d\n", clone);
     
-    print_text("===============================================================================\n");
+    print_text("=====================================================\n");
+    sprintf(player, "The Character : Philo-R-DMD %d\n", clone);
     print_text(player);
     print_text("Primary Attributes                      Secondary Attributes\n");
-    print_text("===============================================================================\n");
-    print_text("Strength ..................... 13       Carrying Capacity ................. 30\n");
-    print_text("Endurance .................... 13       Damage Bonus ....................... 0\n");
-    print_text("Agility ...................... 15       Macho Bonus ....................... -1\n");
-    print_text("Manual Dexterity ............. 15       Melee Bonus ...................... +5%%\n");
-    print_text("Moxie ........................ 13       Aimed Weapon Bonus .............. +10%%\n");
-    print_text("Chutzpah ...................... 8       Comprehension Bonus .............. +4%%\n");
-    print_text("Mechanical Aptitude .......... 14       Believability Bonus .............. +5%%\n");
-    print_text("Power Index .................. 10       Repair Bonus ..................... +5%%\n");
-    print_text("===============================================================================\n");
-    print_text("Credits: 160        Secret Society: Illuminati        Secret Society Rank: 1\n");
-    print_text("Service Group: Power Services               Mutant Power: Precognition\n");
-    print_text("Weapon: laser pistol; to hit, 40%%; type, L; Range, 50m; Reload, 6r; Malfnt, 00\n");
-    print_text("Skills: Basics 1(20%%), Aimed Weapon Combat 2(35%%), Laser 3(40%%),\n        Personal Development 1(20%%), Communications 2(29%%), Intimidation 3(34%%)\n");
-    print_text("Equipment: Red Reflec Armour, Laser Pistol, Laser Barrel (red),\n");
-    print_text("           Notebook & Stylus, Knife, Com Unit 1, Jump suit,\n");
-    print_text("           Secret Illuminati Eye-In-The-Pyramid(tm) Decoder ring,\n");
-    print_text("           Utility Belt & Pouches\n");
-    print_text("===============================================================================\n");
+    print_text("=====================================================\n");
+    print_text("Strength ............ 13  Carrying Capacity ...... 30\n");
+    print_text("Endurance ........... 13  Damage Bonus ............ 0\n");
+    print_text("Agility ............. 15  Macho Bonus ............ -1\n");
+    print_text("Manual Dexterity .... 15  Melee Bonus ........... +5%\n");
+    print_text("Moxie ............... 13  Aimed Weapon Bonus ... +10%\n");
+    print_text("Chutzpah ............. 8  Comprehension Bonus ... +4%\n");
+    print_text("Mechanical Aptitude . 14  Believability Bonus ... +5%\n");
+    print_text("Power Index ......... 10  Repair Bonus .......... +5%\n");
+    print_text("=====================================================\n");
+    print_text("Secret Society: Illuminati               Credits: 160\n");
+    print_text("Secret Society Rank: 1      Service Group: Power Svcs\n");
+    print_text("Mutant Power: Precognition\n");
+    print_text("Weapon: laser pistol; to hit, 40%%; type, L; \n");
+    print_text("        Range, 50m; Reload, 6r; Malfnt, 00\n");
+    print_text("Skills: Basics 1(20%), Aimed Weapon Combat 2(35%),\n");
+    print_text("        Laser 3(40%%),\n");
+    print_text("Personal Development 1(20%), Communications 2(29%),\n");
+    print_text("Intimidation 3(34%)\n");
+    print_text("Equipment: Red Reflec Armour, Laser Pistol,\n");
+    print_text("           Laser Barrel (red), Notebook & Stylus,\n");
+    print_text("           Knife, Com Unit 1, Jump suit, Secret \n");
+    print_text("           Illuminati Eye-In-The-Pyramid(tm) Decoder\n");
+    print_text("            ring, Utility Belt & Pouches\n");
+    print_text("=====================================================\n");
 }
 
 int choose(int a, char *aptr, int b, char *bptr)
@@ -274,7 +285,8 @@ int page3()
 	print_text("You walk to the nearest Computer terminal and request more information about ");
 	print_text("Christmas.  The Computer says, \"That is an A-1 ULTRAVIOLET ONLY IMMEDIATE ");
 	print_text("TERMINATION classified topic.  What is your clearance please, Troubleshooter?\"\n");
-	return choose(4,"You give your correct clearance",5,"You lie and claim Ultraviolet clearance");
+        
+	return choose(4, "You give your correct clearance", 5, "You lie and claim Ultraviolet clearance");
 }
 
 int page4()
@@ -282,6 +294,7 @@ int page4()
 	print_text("\"That is classified information, Troubleshooter, thank you for your inquiry.\n\n");
 	print_text("Please report to an Internal Security self incrimination station as soon as ");
 	print_text("possible.\"\n");
+        
 	return 9;
 }
 
@@ -293,6 +306,7 @@ int page5()
 	print_text("your back to the wall until it arrives.\"  In less than a minute an infrared ");
 	print_text("arrives carrying a white bundle.  He asks you to sign for it, then hands it to ");
 	print_text("you and stands back, well outside of a fragmentation grenade\'s blast radius.\n");
+        
 	return choose(6, "You open the package and put on the uniform", 7, "You finally come to your senses and run for it");
 }
 
@@ -437,15 +451,15 @@ int page11()
 
 int page12()
 {
-	print_text("You walk up to the door and push the button labeled \"push to exit.\" ");
+	print_text("You walk up to the door and push the button labeled  \"push to exit.\" ");
 	print_text("Within seconds a surly looking guard shoves his face into the small plexiglass ");
 	print_text("window.  You can see his mouth forming words but you can\'t hear any of them. ");
-	print_text("You just stare at him blankly  for a few moments until he points down to a ");
+	print_text("You just stare at him blankly for a few moments until he points down to a ");
 	print_text("speaker on your side of the door.  When you put your ear to it you can barely ");
 	print_text("hear him say, \"Let\'s see your briefing release form, bud.  You aren\'t ");
 	print_text("getting out of here without it.\"\n\n");
         
-	return choose(11, "You sit down at the table and read the Orange packet", 57, "You stare around the room some more");
+	return choose(11, "You sit down at the table and read the \nOrange packet", 57, "You stare around the room some more");
 }
 
 int page13()
@@ -1153,7 +1167,7 @@ void main(int argc, char** argv)
     character();
     more();
     
-    while((page=next_page(page))!=0) more();
+    while((page = next_page(page)) !=0) clear();
     
     print_options("Press SELECT to exit", " ");
     
