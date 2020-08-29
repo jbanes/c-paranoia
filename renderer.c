@@ -181,7 +181,7 @@ uint16_t renderer_next_word_width(char* inString)
         
         if(*tempChar == ',') break;
         if(*tempChar == '\"') break;
-        if(*tempChar == '\'') break;
+//        if(*tempChar == '\'') break;
         if(*tempChar == '/') break;
         if(*tempChar == '\\') break;
         if(*tempChar == '&') break;

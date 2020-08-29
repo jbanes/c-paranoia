@@ -55,7 +55,7 @@ void print_text(char *text)
     
     renderer_font_print(&cursor, text);
     
-    if((cursor.y + height) >= (display_height - (2 * height))) 
+    if((cursor.y + height) > (display_height - (2 * height))) 
     {
         more();
     }
@@ -102,15 +102,16 @@ char get_char()
 
 void clear()
 {
+    cursor.x = 0;
     cursor.y = 0;
+    
     renderer_clear(0, 0, 0);
 }
 
 void more()
 {
     print_options("Exit", "More...");
-    cursor.y = 0;
-    
+        
 #ifdef DEBUG
     printf("(page %d)",page);
 #endif
@@ -123,28 +124,37 @@ void more()
     }
     else
     {
-        renderer_clear(0, 0, 0);
+        clear();
     }
 }
 
 int new_clone(int resume)
 {
-	printf("\nClone %d just died.\n", clone);
+    char text[512];
+    
+    sprintf(text, "\nClone %d just died.\n", clone);
+    print_text(text);
+
+    if(++clone>6)
+    {
+        print_text("\n*** You Lose ***\n\nAll your clones are dead.  Your name has been stricken from the records.\n\n			THE END\n");
         
-	if (++clone>6)
-	{
-		printf("\n*** You Lose ***\n\nAll your clones are dead.  Your name has been stricken from the records.\n\n			THE END\n");
-		return 0;
-	}
-	else
-	{
-		printf("Clone %d now activated.\n",clone);
-		ultra_violet=0;
-		action_doll=0;
-		hit_points=10;
-		killer_count=0;
-		return resume;
-	}
+        return 0;
+    }
+    else
+    {
+        sprintf(text, "Clone %d now activated.\n", clone);
+        print_text(text);
+        
+        ultra_violet = 0;
+        action_doll = 0;
+        hit_points = 10;
+        killer_count = 0;
+        
+        more();
+        
+        return resume;
+    }
 }
 
 int dice_roll(int number, int faces)
@@ -272,7 +282,7 @@ int choose3(int a, char *aptr, int b, char *bptr, int y, char *yptr)
 
         switch(button)
         {
-            case 'A': return a;
+            case 'A': return (a < 0) ? new_clone(-a) : a;
             case 'B': return b;
             case 'Y':
             default:  return y;
@@ -283,7 +293,8 @@ int choose3(int a, char *aptr, int b, char *bptr, int y, char *yptr)
 int page1()
 {
 	print_text("You wake up face down on the red and pink checked E-Z-Kleen linoleum floor.\n\n");
-	print_text("You recognize the pattern, it\'s the type preferred in the internal security briefing cells.  When you finally look around you, you see that you are alone ");
+	print_text("You recognize the pattern, it\'s the type preferred in the internal security briefing cells.\n\n");
+	print_text("When you finally look around you, you see that you are alone ");
 	print_text("in a large mission briefing room.\n");
         more();
 	return 57;
@@ -292,15 +303,15 @@ int page1()
 int page2()
 {
 	print_text("\"Greetings,\" says the kindly Internal Security self incrimination expert who ");
-	print_text("meets you at the door, \"How are we doing today?\"  He offers you a doughnut ");
-	print_text("and coffee and asks what brings you here.  This doesn\'t seem so bad, so you ");
+	print_text("meets you at the door, \"How are we doing today?\" \n\nHe offers you a donut ");
+	print_text("and coffee and asks what brings you here. This doesn\'t seem so bad, so you ");
 	print_text("tell him that you have come to confess some possible security lapses.  He ");
 	print_text("smiles knowingly, deftly catching your coffee as you slump to the floor. ");
 	print_text("\"Nothing to be alarmed about; it\'s just the truth serum,\" he says, ");
 	print_text("dragging you back into a discussion room.\n\n");
 	print_text("The next five hours are a dim haze, but you can recall snatches of conversation ");
 	print_text("about your secret society, your mutant power, and your somewhat paranoid ");
-	print_text("distrust of The Computer.  This should explain why you are hogtied and moving ");
+	print_text("distrust of The Computer. This should explain why you are hogtied and moving ");
 	print_text("slowly down the conveyer belt towards the meat processing unit in Food ");
 	print_text("Services.\n");
         more();
@@ -312,10 +323,12 @@ int page2()
 int page3()
 {
 	print_text("You walk to the nearest Computer terminal and request more information about ");
-	print_text("Christmas.  The Computer says, \"That is an A-1 ULTRAVIOLET ONLY IMMEDIATE ");
-	print_text("TERMINATION classified topic.  What is your clearance please, Troubleshooter?\"\n");
+	print_text("Christmas. The Computer says, \"That is an A-1 ULTRAVIOLET ONLY IMMEDIATE ");
+	print_text("TERMINATION classified topic. \n\nWhat is your clearance please, Troubleshooter?\"\n");
         
-	return choose(4, "You give your correct clearance", 5, "You lie and claim Ultraviolet clearance");
+	return choose(
+                4, "You give your correct clearance", 
+                5, "You lie and claim Ultraviolet clearance");
 }
 
 int page4()
@@ -333,19 +346,21 @@ int page5()
 	print_text("The computer says, \"Troubleshooter, you are not wearing the correct color ");
 	print_text("uniform.  You must put on an Ultraviolet uniform immediately.  I have seen to ");
 	print_text("your needs and ordered one already; it will be here shortly.  Please wait with ");
-	print_text("your back to the wall until it arrives.\"  In less than a minute an infrared ");
-	print_text("arrives carrying a white bundle.  He asks you to sign for it, then hands it to ");
+	print_text("your back to the wall until it arrives.\" \n\nIn less than a minute an infrared ");
+	print_text("arrives carrying a white bundle. He asks you to sign for it, then hands it to ");
 	print_text("you and stands back, well outside of a fragmentation grenade\'s blast radius.\n");
         
-	return choose(6, "You open the package and put on the uniform", 7, "You finally come to your senses and run for it");
+	return choose(
+                6, "You open the package and put on the uniform", 
+                7, "You finally come to your senses and run for it");
 }
 
 int page6()
 {
-	print_text("The uniform definitely makes you look snappy and pert.  It really looks ");
+	print_text("The uniform definitely makes you look snappy and pert. It really looks ");
 	print_text("impressive, and even has the new lopsided lapel fashion that you admire so ");
-	print_text("much.  What\'s more, citizens of all ranks come to obsequious attention as you ");
-	print_text("walk past.  This isn\'t so bad being an Ultraviolet.  You could probably come ");
+	print_text("much. \n\nWhat\'s more, citizens of all ranks come to obsequious attention as you ");
+	print_text("walk past. This isn\'t so bad being an Ultraviolet.  You could probably come ");
 	print_text("to like it, given time.\n\n");
 	print_text("The beeping computer terminal interrupts your musings.\n");
         more();
@@ -426,9 +441,9 @@ int page10()
         
 	print_text("You stroll briskly down the corridor, up a ladder, across an unrailed catwalk, ");
 	print_text("under a perilously swinging blast door in urgent need of repair, and into ");
-	print_text("tubecar grand central.  This is the bustling hub of Alpha Complex tubecar ");
-	print_text("transportation.  Before you spreads a spaghetti maze of magnalift tube tracks ");
-	print_text("and linear accelerators.  You bravely study the specially enhanced 3-D tube ");
+	print_text("tubecar grand central. \n\nThis is the bustling hub of Alpha Complex tubecar ");
+	print_text("transportation. Before you spreads a spaghetti maze of magnalift tube tracks ");
+	print_text("and linear accelerators. \n\nYou bravely study the specially enhanced 3-D tube ");
 	print_text("route map; you wouldn\'t be the first Troubleshooter to take a fast tube ride ");
 	print_text("to nowhere.\n\n");
         
@@ -488,35 +503,35 @@ int page11()
 	print_text("        ATTENTION: THE BRIEFING IS TERMINATED.\n\n");
 	more();
 	print_text("You walk to the door and hold your signed briefing release form up to the ");
-	print_text("plexiglass window.  A guard scrutinises it for a moment and then slides back ");
-	print_text("the megabolts holding the door shut.  You are now free to continue the ");
-	print_text("mission.\n\n");
+	print_text("plexiglass window.\n\nA guard scrutinizes it for a moment and then slides back ");
+	print_text("the megabolts holding the door shut. \n\nYou are now free to continue the ");
+	print_text("mission.\n");
         
 	return choose(3, "You wish to ask The Computer for more information about Christmas", 10, "You have decided to go directly to Goods Distribution Hall 7-beta");
 }
 
 int page12()
 {
-	print_text("You walk up to the door and push the button labeled  \"push to exit.\" ");
+	print_text("You walk up to the door and push the button labeled \"push to exit.\"\n\n");
 	print_text("Within seconds a surly looking guard shoves his face into the small plexiglass ");
-	print_text("window.  You can see his mouth forming words but you can\'t hear any of them. ");
+	print_text("window.  You can see his mouth forming words but you can\'t hear any of them.\n\n");
 	print_text("You just stare at him blankly for a few moments until he points down to a ");
-	print_text("speaker on your side of the door.  When you put your ear to it you can barely ");
-	print_text("hear him say, \"Let\'s see your briefing release form, bud.  You aren\'t ");
-	print_text("getting out of here without it.\"\n\n");
+	print_text("speaker on your side of the door. When you put your ear to it you can barely ");
+	print_text("hear him say, \"Let\'s see your briefing release form, bud. You aren\'t ");
+	print_text("getting out of here without it.\"\n");
         
 	return choose(11, "You sit down at the table and read the \nOrange packet", 57, "You stare around the room some more");
 }
 
 int page13()
 {
-	print_text("You step into the shiny plasteel tubecar, wondering why the shape has always\n");
-	print_text("reminded you of bullets.  The car shoots forward the instant your feet touch\n");
-	print_text("the slippery gray floor, pinning you immobile against the back wall as the\n");
-	print_text("tubecar careens toward GDH7-beta.  Your only solace is the knowledge that it\n");
-	print_text("could be worse, much worse.\n");
-	print_text("Before too long the car comes to a stop.  You can see signs for GDH7-beta\n");
-	print_text("through the window.  With a little practice you discover that you can crawl\n");
+	print_text("You step into the shiny plasteel tubecar, wondering why the shape has always ");
+	print_text("reminded you of bullets. \n\nThe car shoots forward the instant your feet touch ");
+	print_text("the slippery gray floor, pinning you immobile against the back wall as the ");
+	print_text("tubecar careens toward GDH7-beta. \n\nYour only solace is the knowledge that it ");
+	print_text("could be worse, much worse.\n\n");
+	print_text("Before too long the car comes to a stop. You can see signs for GDH7-beta ");
+	print_text("through the window. \n\nWith a little practice you discover that you can crawl ");
 	print_text("to the door and pull open the latch.\n");
         more();
         
@@ -525,14 +540,14 @@ int page13()
 
 int page14()
 {
-	print_text("You manage to pull yourself out of the tubecar and look around.  Before you is\n");
-	print_text("one of the most confusing things you have ever seen, a hallway that is\n");
-	print_text("simultaneously both red and green clearance.  If this is the result of\n");
-	print_text("Christmas then it\'s easy to see the evils inherent in its practice.\n");
-	print_text("You are in the heart of a large goods distribution centre.  You can see all\n");
-	print_text("about you evidence of traitorous secret society Christmas celebration; rubber\n");
-	print_text("faced robots whiz back and forth selling toys to holiday shoppers, simul-plast\n");
-	print_text("wreaths hang from every light fixture, while ahead in the shadows is a citizen\n");
+	print_text("You manage to pull yourself out of the tubecar and look around. \n\nBefore you is ");
+	print_text("one of the most confusing things you have ever seen, a hallway that is ");
+	print_text("simultaneously both red and green clearance. \n\nIf this is the result of ");
+	print_text("Christmas then it\'s easy to see the evils inherent in its practice.\n\n");
+	print_text("You are in the heart of a large goods distribution center. You can see all ");
+	print_text("about you evidence of traitorous secret society Christmas celebration; rubber ");
+	print_text("faced robots whiz back and forth selling toys to holiday shoppers, simul-plast ");
+	print_text("wreaths hang from every light fixture, while ahead in the shadows is a citizen ");
 	print_text("wearing a huge red synthetic flower.\n");
         more();
         
@@ -542,24 +557,24 @@ int page14()
 int page15()
 {
 	print_text("You are set upon by a runty robot with a queer looking face and two pointy ");
-	print_text("rubber ears poking from beneath a tattered cap.  \"Hey mister,\" it says, ");
-	print_text("\"you done all your last minute Christmas shopping?  I got some real neat junk ");
-	print_text("here.  You don\'t wanna miss the big day tommorrow, if you know what I mean.\" ");
-	print_text("The robot opens its bag to show you a pile of shoddy Troubleshooter dolls.  It ");
-	print_text("reaches in and pulls out one of them.  \"Look, these Action Troubleshooter(tm) ");
+	print_text("rubber ears poking from beneath a tattered cap. \n\n\"Hey mister,\" it says, ");
+	print_text("\"you done all your last minute Christmas shopping? I got some real neat junk ");
+	print_text("here. You don\'t wanna miss the big day tommorrow, if you know what I mean.\"\n\n");
+	print_text("The robot opens its bag to show you a pile of shoddy Troubleshooter dolls. It ");
+	print_text("reaches in and pulls out one of them. \"Look, these Action Troubleshooter(tm) ");
 	print_text("dolls are the neatest thing.  This one\'s got moveable arms and when you ");
 	print_text("squeeze him, his little rifle squirts realistic looking napalm.  It\'s only ");
-	print_text("50 credits.  Oh yeah, Merry Christmas.\"\n");
+	print_text("50 credits. Oh yeah, Merry Christmas.\"\n");
         
-        return choose3(16, "You decide to buy the doll.", 17, "You shoot the robot.", 22, "You ignore the robot and keep searching the hall.");
+        return choose3(16, "You decide to buy the doll.", 17, "You shoot the robot.", 22, "You ignore the robot and keep searching.");
 }
 
 int page16()
 {
 	print_text("The doll is a good buy for fifty credits; it will make a fine Christmas present ");
-	print_text("for one of your friends.  After the sale the robot rolls away.  You can use ");
-	print_text("the doll later in combat.  It works just like a cone rifle firing napalm, ");
-	print_text("except that occasionally it will explode and blow the user to smithereens. ");
+	print_text("for one of your friends. After the sale the robot rolls away. \n\nYou can use ");
+	print_text("the doll later in combat. It works just like a cone rifle firing napalm, ");
+	print_text("except that occasionally it will explode and blow the user to smithereens.\n\n");
 	print_text("But don\'t let that stop you.\n");
         more();
         
@@ -573,7 +588,7 @@ int page17()
     int i, robot_hp = 15;
     
     print_text("You whip out your laser and shoot the robot, but not before it squeezes the ");
-    print_text("toy at you.  The squeeze toy has the same effect as a cone rifle firing napalm, ");
+    print_text("toy at you. The squeeze toy has the same effect as a cone rifle firing napalm, ");
     print_text("and the elfbot\'s armour has no effect against your laser.\n\n");
 
     for(i=0;i<2;i++)
@@ -635,8 +650,8 @@ int page17()
 
 int page18()
 {
-	print_text("You walk to the centre of the hall, ogling like an infrared fresh from the ");
-	print_text("clone vats.  Towering before you is the most unearthly thing you have ever ");
+	print_text("You walk to the center of the hall, ogling like an infrared fresh from the ");
+	print_text("clone vats. \n\nTowering before you is the most unearthly thing you have ever ");
 	print_text("seen, a green multi armed mutant horror hulking 15 feet above your head. ");
 	print_text("Its skeletal body is draped with hundreds of metallic strips (probably to ");
 	print_text("negate the effects of some insidious mutant power), and the entire hideous ");
@@ -694,7 +709,7 @@ int page20()
 int page21()
 {
 	print_text("You have been wasting the leading citizens of Alpha Complex at a prodigious ");
-	print_text("rate.  This has not gone unnoticed by the Internal Security squad at GDH7-beta. ");
+	print_text("rate.  This has not gone unnoticed by the Internal Security squad at GDH7-beta.\n\n");
 	print_text("Suddenly, a net of laser beams spear out of the gloomy corners of the hall, ");
 	print_text("chopping you into teeny, weeny bite size pieces.\n");
         more();
@@ -724,33 +739,36 @@ int page22()
 
 int page23()
 {
-	print_text("You go to the nearest computer terminal and declare yourself a mutant. ");
+	print_text("You go to the nearest computer terminal and declare yourself a mutant.\n\n");
 	print_text("\"A mutant, he\'s a mutant,\" yells a previously unnoticed infrared who had ");
 	print_text("been looking over your shoulder.  You easily gun him down, but not before a ");
 	print_text("dozen more citizens take notice and aim their weapons at you.\n");
-	return choose(28,"You tell them that it was really only a bad joke",24,"You want to fight it out, one against twelve");
+        
+	return choose(28, "You tell them that it was really only a bad joke", 24, "You want to fight it out, one against twelve");
 }
 
 int page24()
 {
-	print_text("Golly, I never expected someone to pick this.  I haven\'t even designed ");
-	print_text("the 12 citizens who are going to make a sponge out of you.  Tell you what, ");
+	print_text("Golly, I never expected someone to pick this. I haven\'t even designed ");
+	print_text("the 12 citizens who are going to make a sponge out of you. \n\nTell you what, ");
 	print_text("I\'ll give you a second chance.\n");
-	return choose(28,"You change your mind and say it was only a bad joke",25,"You REALLY want to shoot it out");
+        
+	return choose(28, "You change your mind and say it was only a bad joke", 25, "You REALLY want to shoot it out");
 }
 
 int page25()
 {
-	print_text("Boy, you really can\'t take a hint! ");
+	print_text("Boy, you really can\'t take a hint!\n\n");
 	print_text("They\'re closing in.  Their trigger fingers are twitching, they\'re about to ");
 	print_text("shoot.  This is your last chance.\n");
-	return choose(28,"You tell them it was all just a bad joke",26,"You are going to shoot");
+        
+	return choose(28, "You tell them it was all just a bad joke" , 26, "You are going to shoot");
 }
 
 int page26()
 {
 	print_text("You can read the cold, sober hatred in their eyes (They really didn\'t think ");
-	print_text("it was funny), as they tighten the circle around you.  One of them shoves a ");
+	print_text("it was funny), as they tighten the circle around you. \n\nOne of them shoves a ");
 	print_text("blaster up your nose, but that doesn\'t hurt as much as the multi-gigawatt ");
 	print_text("carbonium tipped food drill in the small of your back.\n\n");
 	print_text("You spend the remaining micro-seconds of your life wondering what you did wrong\n");
@@ -775,9 +793,9 @@ int page28()
 
 int page29()
 {
-	print_text("\"Psst, hey citizen, come here.  Pssfft,\" you hear.  When you peer around ");
-	print_text("you can see someone\'s dim outline in the shadows.  \"I got some information ");
-	print_text("on the Master Retailer.  It\'ll only cost you 30 psst credits.\"\n");
+	print_text("\"Psst, hey citizen, come here.  Pssfft,\" you hear. \n\nWhen you peer around ");
+	print_text("you can see someone\'s dim outline in the shadows. \"I got some information ");
+	print_text("on the Master Retailer. It\'ll only cost you 30 psst credits.\"\n");
         
         return choose3(
                 30, "You pay the 30 credits for the info.", 
@@ -787,18 +805,18 @@ int page29()
 
 int page30()
 {
-	print_text("You step into the shadows and offer the man a thirty credit bill.  \"Just drop ");
-	print_text("it on the floor,\" he says.  \"So you\'re looking for the Master Retailer, pssfft? ");
+	print_text("You step into the shadows and offer the man a thirty credit bill. \"Just drop ");
+	print_text("it on the floor,\" he says. \n\n\"So you\'re looking for the Master Retailer, pssfft? ");
 	print_text("I\'ve seen him, he\'s a fat man in a fuzzy red and white jump suit.  They say ");
 	print_text("he\'s a high programmer with no respect for proper security.  If you want to ");
 	print_text("find him then pssfft step behind me and go through the door.\"\n\n");
-	print_text("Behind the man is a reinforced plasteel blast door.  The centre of it has been ");
+	print_text("Behind the man is a reinforced plasteel blast door.  The center of it has been ");
 	print_text("buckled toward you in a manner you only saw once before when you were field ");
 	print_text("testing the rocket assist plasma slingshot (you found it easily portable but ");
 	print_text("prone to misfire).  Luckily it isn\'t buckled too far for you to make out the ");
-	print_text("warning sign.  WARNING!! Don\'t open this door or the same thing will happen to ");
+	print_text("warning sign. \n\nWARNING!! Don\'t open this door or the same thing will happen to ");
 	print_text("you.  Opening this door is a capital offense.  Do not do it.  Not at all. This ");
-	print_text("is not a joke.\n\n");
+	print_text("is not a joke.\n");
         
         return choose3(
                 56, "You use your Precognition mutant power on opening the door.", 
@@ -822,9 +840,9 @@ int page31()
 int page32()
 {
 	print_text("Finally it\'s your big chance to prove that you\'re as good a troubleshooter ");
-	print_text("as your previous clone.  You walk briskly to mission briefing and pick up your ");
-	print_text("previous clone\'s personal effects and notepad.  After reviewing the notes you ");
-	print_text("know what has to be done.  You catch the purple line to Goods Distribution Hall ");
+	print_text("as your previous clone. \n\nYou walk briskly to mission briefing and pick up your ");
+	print_text("previous clone\'s personal effects and notepad. After reviewing the notes you ");
+	print_text("know what has to be done. \n\nYou catch the purple line to Goods Distribution Hall ");
 	print_text("7-beta and begin to search for the blast door.\n");
         more();
         
@@ -835,9 +853,9 @@ int page33()
 {
 	blast_door=1;
 	print_text("You release the megabolts on the blast door, then strain against it with your ");
-	print_text("awesome strength.  Slowly the door creaks open.  You bravely leap through the ");
+	print_text("awesome strength. \n\nSlowly the door creaks open. \n\nYou bravely leap through the ");
 	print_text("opening and smack your head into the barrel of a 300 mm \'ultra shock\' class ");
-	print_text("plasma cannon.  It\'s dark in the barrel now, but just before your head got ");
+	print_text("plasma cannon. \n\nIt\'s dark in the barrel now, but just before your head got ");
 	print_text("stuck you can remember seeing a group of technicians anxiously watch you leap ");
 	print_text("into the room.\n");
         more();
@@ -848,30 +866,32 @@ int page33()
 
 int page34()
 {
-	print_text("You have found a sealed envelope on the body.  You open it and read:\n");
-	print_text("\"WARNING: Ultraviolet Clearance ONLY.  DO NOT READ.\n");
-	print_text("Memo from Chico-U-MRX4 to Harpo-U-MRX5.\n");
+	print_text("You have found a sealed envelope on the body.  You open it and read:\n\n\n\n");
+	print_text("WARNING: Ultraviolet Clearance ONLY.    DO NOT READ.\n\n");
+	print_text("Memo from Chico-U-MRX4 to Harpo-U-MRX5.\n\n");
 	print_text("The planned takeover of the Troubleshooter Training Course goes well, Comrade. ");
 	print_text("Once we have trained the unwitting bourgeois troubleshooters to work as ");
-	print_text("communist dupes, the overthrow of Alpha Complex will be unstoppable.  My survey ");
+	print_text("communist dupes, the overthrow of Alpha Complex will be unstoppable. \n\nMy survey ");
 	print_text("of the complex has convinced me that no one suspects a thing; soon it will be ");
-	print_text("too late for them to oppose the revolution.  The only thing that could possibly ");
+	print_text("too late for them to oppose the revolution.\n\n");
+	more();
+	print_text("The only thing that could possibly ");
 	print_text("impede the people\'s revolution would be someone alerting The Computer to our ");
 	print_text("plans (for instance, some enterprising Troubleshooter could tell The Computer ");
 	print_text("that the communists have liberated the Troubleshooter Training Course and plan ");
 	print_text("to use it as a jumping off point from which to undermine the stability of all ");
 	print_text("Alpha Complex), but as we both know, the capitalistic Troubleshooters would ");
-	print_text("never serve the interests of the proletariat above their own bourgeois desires. ");
+	print_text("never serve the interests of the proletariat above their own bourgeois desires.\n\n");
 	print_text("P.S. I\'m doing some Christmas shopping later today.  Would you like me to pick ");
-	print_text("you up something?\"\n");
+	print_text("you up something?\n");
 	more();
-	print_text("When you put down the memo you are overcome by that strange deja\'vu again. ");
-	print_text("You see yourself talking privately with The Computer.  You are telling it all ");
+	print_text("When you put down the memo you are overcome by that strange deja\'vu again.\n\n");
+	print_text("You see yourself talking privately with The Computer.\n\nYou are telling it all ");
 	print_text("about the communists\' plan, and then the scene shifts and you see yourself ");
 	print_text("showered with awards for foiling the insidious communist plot to take over the ");
 	print_text("complex.\n");
 	read_letter=1;
-	return choose(46,"You rush off to the nearest computer terminal to expose the commies",22,"You wander off to look for more evidence");
+	return choose(46, "You rush off to the nearest computer terminal to expose the commies", 22, "You wander off to look for more evidence");
 }
 
 int page35()
@@ -899,14 +919,16 @@ int page36()
 {
 	print_text("\"Congratulations, troubleshooter, you have successfully found the lair of the ");
 	print_text("Master Retailer and completed the Troubleshooter Training Course test mission,\" ");
-	print_text("a muffled voice tells you through the barrel.  \"Once we dislodge your head ");
+	print_text("a muffled voice tells you through the barrel.\n\n");
+        more();
+	print_text("\"Once we dislodge your head ");
 	print_text("from the barrel of the \'Ultra Shock\' plasma cannon you can begin with the ");
-	print_text("training seminars, the first of which will concern the 100%% accurate ");
-	print_text("identification and elimination of unregistered mutants.  If you have any ");
+	print_text("training seminars, the first of which will concern the 100% accurate ");
+	print_text("identification and elimination of unregistered mutants. \n\nIf you have any ");
 	print_text("objections please voice them now.\"\n");
         
         return choose3(
-                new_clone(32), "You appreciate his courtesy and voice an objection.", 
+                -32, "You appreciate his courtesy and voice an objection.", 
                 23, "After your head is removed from the cannon, you register as a mutant.", 
                 37, "After your head is removed from the cannon, you go to the unregistered\n     mutant identification and elimination seminar.");
         
@@ -915,16 +937,16 @@ int page36()
 int page37()
 {
 	print_text("\"Come with me please, Troubleshooter,\" says the Green clearance technician ");
-	print_text("after he has dislodged your head from the cannon.  \"You have been participating ");
+	print_text("after he has dislodged your head from the cannon. \n\n\"You have been participating ");
 	print_text("in the Troubleshooter Training Course since you got off the tube car in ");
-	print_text("GDH7-beta,\" he explains as he leads you down a corridor.  \"The entire ");
+	print_text("GDH7-beta,\" he explains as he leads you down a corridor. \n\n\"The entire ");
 	print_text("Christmas assignment was a test mission to assess your current level of ");
 	print_text("training.  You didn\'t do so well.  We\'re going to start at the beginning with ");
 	print_text("the other student.  Ah, here we are, the mutant identification and elimination ");
-	print_text("lecture.\"  He shows you into a vast lecture hall filled with empty seats. ");
+	print_text("lecture.\"  \n\nHe shows you into a vast lecture hall filled with empty seats. ");
 	print_text("There is only one other student here, a Troubleshooter near the front row ");
-	print_text("playing with his Action Troubleshooter(tm) figure.  \"Find a seat and I will ");
-	print_text("begin,\" says the instructor.\n");
+	print_text("playing with his Action Troubleshooter(tm) figure. \n\n\"Find a seat and I will ");
+	print_text("begin,\" says the instructor.");
         more();
         
 	return 38;
@@ -934,37 +956,41 @@ int page38()
 {
     char clone_text[256];
     
-    sprintf(clone_text, "\"I am Plato-B-PHI%d, head of mutant propaganda here at the training course.\n", plato_clone);
+    sprintf(clone_text, "\"I am Plato-B-PHI%d, head of mutant propaganda here at the training course. ", plato_clone);
     
-	print_text(clone_text);
-	print_text("If you have any questions about mutants please come to me.  Today I will be ");
-	print_text("talking about mutant detection.  Detecting mutants is very easy.  One simply ");
-	print_text("watches for certain tell tale signs, such as the green scaly skin, the third ");
-	print_text("arm growing from the forehead, or other similar disfigurements so common with ");
-	print_text("their kind.  There are, however, a few rare specimens that show no outward sign ");
-	print_text("of their treason.  This has been a significant problem, so our researchers have ");
-	print_text("been working on a solution.  I would like a volunteer to test this device,\" ");
-	print_text("he says, holding up a ray gun looking thing.  \"It is a mutant detection ray. ");
-	print_text("This little button detects for mutants, and this big button stuns them once ");
-	print_text("they are discovered.  Who would like to volunteer for a test?\"\n\n");
-	print_text("The Troubleshooter down the front squirms deeper into his chair.\n");
-	return choose(39,"You volunteer for the test",40,"You duck behind a chair and hope the instructor doesn\'t notice you");
+    print_text(clone_text);
+    print_text("If you have any questions about mutants please come to me.  Today I will be ");
+    print_text("talking about mutant detection.  \n\nDetecting mutants is very easy. One simply ");
+    print_text("watches for certain tell tale signs, such as the green scaly skin, the third ");
+    print_text("arm growing from the forehead, or other similar disfigurements so common with ");
+    print_text("their kind. \n\nThere are, however, a few rare specimens that show no outward sign ");
+    print_text("of their treason.  This has been a significant problem, so our researchers have ");
+    print_text("been working on a solution. \n\nI would like a volunteer to test this device,\" ");
+    print_text("he says, holding up a ray gun looking thing.");
+    more();
+    print_text("\"It is a mutant detection ray. ");
+    print_text("This little button detects for mutants, and this big button stuns them once ");
+    print_text("they are discovered.  Who would like to volunteer for a test?\"\n\n");
+    print_text("The Troubleshooter down the front squirms deeper into his chair.\n");
+    
+    return choose(39, "You volunteer for the test", 40, "You duck behind a chair and hope the instructor doesn\'t notice you");
 }
 
 int page39()
 {
-	print_text("You bravely volunteer to test the mutant detection gun.  You stand up and walk\n");
-	print_text("down the steps to the podium, passing a very relieved Troubleshooter along the\n");
-	print_text("way.  When you reach the podium Plato-B-PHI hands you the mutant detection gun\n");
-	print_text("and says, \"Here, aim the gun at that Troubleshooter and push the small button.\n");
-	print_text("If you see a purple light, stun him.\"  Grasping the opportunity to prove your\n");
-	print_text("worth to The Computer, you fire the mutant detection ray at the Troubleshooter.\n");
-	print_text("A brilliant purple nimbus instantly surrounds his body.  You slip your finger\n");
-	print_text("to the large stun button and he falls writhing to the floor.\n");
-	print_text("\"Good shot,\" says the instructor as you hand him the mutant detection gun,\n");
-	print_text("\"I\'ll see that you get a commendation for this.  It seems you have the hang\n");
-	print_text("of mutant detection and elimination.  You can go on to the secret society\n");
-	print_text("infiltration class.  I\'ll see that the little mutie gets packaged for\n");
+	print_text("You bravely volunteer to test the mutant detection gun. You stand up and walk ");
+	print_text("down the steps to the podium, passing a very relieved Troubleshooter along the ");
+	print_text("way. \n\nWhen you reach the podium Plato-B-PHI hands you the mutant detection gun ");
+	print_text("and says, \"Here, aim the gun at that Troubleshooter and push the small button. ");
+	print_text("If you see a purple light, stun him.\" \n\nGrasping the opportunity to prove your ");
+	print_text("worth to The Computer, you fire the mutant detection ray at the Troubleshooter. ");
+	print_text("A brilliant purple nimbus instantly surrounds his body. You slip your finger ");
+	print_text("to the large stun button and he falls writhing to the floor.\n\n");
+        more();
+	print_text("\"Good shot,\" says the instructor as you hand him the mutant detection gun, ");
+	print_text("\"I\'ll see that you get a commendation for this.  It seems you have the hang ");
+	print_text("of mutant detection and elimination.  You can go on to the secret society ");
+	print_text("infiltration class.  I\'ll see that the little mutie gets packaged for ");
 	print_text("tomorrow\'s mutant dissection class.\"\n");
         more();
         
@@ -973,49 +999,54 @@ int page39()
 
 int page40()
 {
-	print_text("You breathe a sigh of relief as Plato-B-PHI picks on the other Troubleshooter.\n");
-	print_text("\"You down here in the front,\" says the instructor pointing at the other\n");
-	print_text("Troubleshooter, \"you\'ll make a good volunteer.  Please step forward.\"\n");
-	print_text("The Troubleshooter looks around with a \'who me?\' expression on his face, but\n");
-	print_text("since he is the only one visible in the audience he figures his number is up.\n");
-	print_text("He walks down to the podium clutching his Action Troubleshooter(tm) doll before\n");
-	print_text("him like a weapon.  \"Here,\" says Plato-B-PHI, \"take the mutant detection ray\n");
-	print_text("and point it at the audience.  If there are any mutants out there we\'ll know\n");
-	print_text("soon enough.\"  Suddenly your skin prickles with static electricity as a bright\n");
-	print_text("purple nimbus surrounds your body.  \"Ha Ha, got one,\" says the instructor.\n");
-	print_text("\"Stun him before he gets away.\"\n");
-	more();
-        
-	while(1)
-	{
-		if (dice_roll(1,100)<=30)
-		{
-			print_text("His shot hits you.  You feel numb all over.\n");
-			return 49;
-		}
-		else	print_text("His shot just missed.\n");
+    print_text("You breathe a sigh of relief as Plato-B-PHI picks on the other Troubleshooter.\n\n");
+    print_text("\"You down here in the front,\" says the instructor pointing at the other ");
+    print_text("Troubleshooter, \"you\'ll make a good volunteer.  Please step forward.\"\n\n");
+    print_text("The Troubleshooter looks around with a \'who me?\' expression on his face, but ");
+    print_text("since he is the only one visible in the audience he figures his number is up. ");
+    print_text("He walks down to the podium clutching his Action Troubleshooter(tm) doll before ");
+    print_text("him like a weapon. \n\n\"Here,\" says Plato-B-PHI, \"take the mutant detection ray ");
+    print_text("and point it at the audience.  If there are any mutants out there we\'ll know ");
+    print_text("soon enough.\" \n\nSuddenly your skin prickles with static electricity as a bright ");
+    print_text("purple nimbus surrounds your body. \n\n\"Ha Ha, got one,\" says the instructor. ");
+    print_text("\"Stun him before he gets away.\"\n");
+    more();
 
-		if (dice_roll(1,100)<=40)
-		{
-			print_text("You just blew his head off.  His lifeless hand drops the mutant detector ray.\n");
-			return 50;
-		}
-		else	print_text("You burnt a hole in the podium.  He sights the mutant detector ray on you.\n");
-	}
-        
-        more();
+    while(1)
+    {
+        if(dice_roll(1,100)<=30)
+        {
+            print_text("His shot hits you. You feel numb all over.\n");
+            return 49;
+        }
+        else
+        {
+            print_text("His shot just missed.\n");
+        }
+
+        if(dice_roll(1,100)<=40)
+        {
+            print_text("You just blew his head off. His lifeless hand drops the mutant detector ray.\n");
+            return 50;
+        }
+        else
+        {
+            print_text("You burnt a hole in the podium. He sights the mutant detector ray on you.\n");
+        }
+    }
+
+    more();
 }
 
 int page41()
 {
 	print_text("You stumble down the hallway of the Troubleshooter Training Course looking for ");
-	print_text("your next class.  Up ahead you see one of the instructors waving to you.  When ");
-	print_text("you get there he shakes your hand and says, \"I am Jung-I-PSY.  Welcome to the ");
-	print_text("secret society infiltration seminar.  I hope you ...\"\n\n");
-	print_text("You don\'t catch the rest of his greeting because you\'re paying too much attention to his handshake; ");
+	print_text("your next class.  Up ahead you see one of the instructors waving to you. \n\nWhen ");
+	print_text("you get there he shakes your hand and says, \"I am Jung-I-PSY. Welcome to the ");
+	print_text("secret society infiltration seminar. I hope you ...\"\n\n");
+	print_text("You don\'t catch the rest of his greeting because \nyou\'re paying too much attention to his handshake; ");
 	print_text("it is the strangest thing that has ever been done to your hand, sort of how it ");
-	print_text("would feel if you put a neuro whip in a high energy palm massage unit.\n\n");
-        more();
+	print_text("would feel if you put a neuro-whip in a high energy palm massage unit.\n\n");
 	print_text("It doesn\'t take you long to learn what he is up to; you feel him briefly shake ");
 	print_text("your hand with the secret Illuminati handshake.\n");
         
@@ -1045,7 +1076,9 @@ int page43()
 	print_text("will easily be promoted to the next level of your Illuminati secret society.\n\n");
 	print_text("The lecture continues for three hours, during which you have the opportunity ");
 	print_text("to practice many different handshakes.  Afterwards everyone is directed to ");
-	print_text("attend the graduation ceremony.\n\nBefore you must go you have a little time to ");
+	print_text("attend the graduation ceremony.\n\n");
+        more();
+	print_text("Before you must go you have a little time to ");
 	print_text("talk to The Computer about, you know, certain topics.\n");
         
 	return choose(44, "You go looking for a computer terminal", 55, "You go to the graduation ceremony immediately");
@@ -1104,10 +1137,10 @@ int page47()
 
 int page48()
 {
-	print_text("The tubecar shoots forward as you enter, slamming you back into a pile of\n");
-	print_text("garbage.  The front end rotates upward and you, the garbage and the garbage\n");
-	print_text("disposal car shoot straight up out of Alpha Complex.  One of the last things\n");
-	print_text("you see is a small blue sphere slowly dwindling behind you.  After you fail to\n");
+	print_text("The tubecar shoots forward as you enter, slamming you back into a pile of ");
+	print_text("garbage. \n\nThe front end rotates upward and you, the garbage and the garbage ");
+	print_text("disposal car shoot straight up out of Alpha Complex. \n\nOne of the last things ");
+	print_text("you see is a small blue sphere slowly dwindling behind you.  After you fail to ");
 	print_text("report in, you will be assumed dead.\n");
         more();
         
@@ -1116,7 +1149,7 @@ int page48()
 
 int page49()
 {
-	print_text("The instructor drags your inert body into a specimen detainment cage.\n");
+	print_text("The instructor drags your inert body into a specimen detainment cage.\n\n");
 	print_text("\"He\'ll make a good subject for tomorrow\'s mutant dissection class,\" you hear.\n");
         more();
         
@@ -1125,18 +1158,19 @@ int page49()
 
 int page50()
 {
-	print_text("You put down the other Troubleshooter, and then wisely decide to drill a few\n");
-	print_text("holes in the instructor as well; the only good witness is a dead witness.\n");
+	print_text("You put down the other Troubleshooter, and then wisely decide to drill a few ");
+	print_text("holes in the instructor as well; the only good witness is a dead witness.\n\n");
 	print_text("You continue with the training course.\n");
         more();
         
 	plato_clone++;
+        
 	return 41;
 }
 
 int page51()
 {
-	print_text("You run for it, but you don\'t run far.  Three hundred strange and exotic\n");
+	print_text("You run for it, but you don\'t run far. Three hundred strange and exotic ");
 	print_text("weapons turn you into a freeze dried cloud of soot.\n");
         more();
         
@@ -1145,8 +1179,8 @@ int page51()
 
 int page52()
 {
-	print_text("You wisely wait until the instructor returns with a Blue Internal Security\n");
-	print_text("guard.  The guard leads you to an Internal Security self incrimination station.\n");
+	print_text("You wisely wait until the instructor returns with a Blue Internal Security ");
+	print_text("guard.\n\nThe guard leads you to an Internal Security self incrimination station.\n");
         more();
         
 	return 2;
@@ -1155,18 +1189,19 @@ int page52()
 int page53()
 {
 	print_text("You tell The Computer about:\n");
+        
 	return choose(47,"The commies who have infiltrated the\n     Troubleshooter Training Course and\n     the impending People\'s Revolution",54,"Something less dangerous");
 }
 
 int page54()
 {
-	print_text("\"Do not try to change the subject, Troubleshooter,\" says The Computer.\n");
-	print_text("\"It is a serious crime to ask about the communists.  You will be terminated\n");
-	print_text("immediately.  Thank you for your inquiry.  The Computer is your friend.\"\n");
-	print_text("Steel bars drop to your left and right, trapping you here in the hallway.\n");
-	print_text("A spotlight beams from the computer console to brilliantly iiluminate you while\n");
-	print_text("the speaker above your head rapidly repeats \"Traitor, Traitor, Traitor.\"\n");
-	print_text("It doesn\'t take long for a few guards to notice your predicament and come to\n");
+	print_text("\"Do not try to change the subject, Troubleshooter,\" says The Computer. ");
+	print_text("\"It is a serious crime to ask about the communists.  You will be terminated ");
+	print_text("immediately.  Thank you for your inquiry.  The Computer is your friend.\"\n\n");
+	print_text("Steel bars drop to your left and right, trapping you here in the hallway. ");
+	print_text("A spotlight beams from the computer console to brilliantly iiluminate you while ");
+	print_text("the speaker above your head rapidly repeats \"Traitor, Traitor, Traitor.\"\n\n");
+	print_text("It doesn\'t take long for a few guards to notice your predicament and come to ");
 	print_text("finish you off.\n");
         more();
         
@@ -1178,36 +1213,38 @@ int page55()
 {
     char clone_text[256];
     
-	print_text("You and 300 other excited graduates are marched  from the lecture hall and into\n");
-	print_text("a large auditorium for the graduation exercise.  The auditorium is\n");
-	print_text("extravagantly decorated in the colours of the graduating class.  Great red and\n");
-	print_text("green plasti-paper ribbons drape from the walls, while a huge sign reading\n");
-	print_text("\"Congratulations class of GDH7-beta-203.44/A\" hangs from the raised stage down\n");
-	print_text("front.  Once everyone finds a seat the ceremony begins.  Jung-I-PSY is the\n");
-	print_text("first to speak, \"Congratulations students, you have successfully survived the\n");
-	print_text("Troubleshooter Training Course.  It always brings me great pride to address\n");
-	print_text("the graduating class, for I know, as I am sure you do too, that you are now\n");
-	print_text("qualified for the most perilous missions The Computer may select for you.  The\n");
-	print_text("thanks is not owed to us of the teaching staff, but to all of you, who have\n");
-	print_text("persevered and graduated.  Good luck and die trying.\"  Then the instructor\n");
-	print_text("begins reading the names of the students who one by one walk to the front of\n");
-	print_text("the auditorium and receive their diplomas.  Soon it is your turn,\n");
-	print_text("\"Philo-R-DMD, graduating a master of mutant identification and secret society\n");
-	sprintf(clone_text, "infiltration.\"  You walk up and receive your diploma from Plato-B-PHI%d, then\n", plato_clone);
+	print_text("You and 300 other excited graduates are marched from the lecture hall and into ");
+	print_text("a large auditorium for the graduation exercise. The auditorium is ");
+	print_text("extravagantly decorated in the colours of the graduating class. Great red and ");
+	print_text("green plasti-paper ribbons drape from the walls, while a huge sign reading\n\n");
+	print_text("\"Congratulations class of GDH7-beta-203.44/A\" hangs from the raised stage down ");
+	print_text("front. \n\nOnce everyone finds a seat the ceremony begins. Jung-I-PSY is the ");
+	print_text("first to speak, \"Congratulations students, you have successfully survived the ");
+	print_text("Troubleshooter Training Course.  It always brings me great pride to address ");
+	print_text("the graduating class, for I know, as I am sure you do too, that you are now ");
+	print_text("qualified for the most perilous missions The Computer may select for you. The ");
+	print_text("thanks is not owed to us of the teaching staff, but to all of you, who have ");
+	print_text("persevered and graduated.  Good luck and die trying.\"");
+        more();
+	print_text("Then the instructor begins reading the names of the students who one by one walk to the front of ");
+	print_text("the auditorium and receive their diplomas. \n\nSoon it is your turn, ");
+	print_text("\"Philo-R-DMD, graduating a master of mutant identification and secret society ");
+	sprintf(clone_text, "infiltration.\"  You walk up and receive your diploma from Plato-B-PHI%d, then ", plato_clone);
 	print_text(clone_text);
-	print_text("return to your seat.  There is another speech after the diplomas are handed\n");
-	print_text("out, but it is cut short by by rapid fire laser bursts from the high spirited\n");
-	print_text("graduating class.  You are free to return to your barracks to wait, trained\n");
-	print_text("and fully qualified, for your next mission.  You also get that cherished\n");
-	print_text("promotion from the Illuminati secret society.  In a week you receive a\n");
-	print_text("detailed Training Course bill totalling 1,523 credits.\n");
+	print_text("return to your seat. \n\nThere is another speech after the diplomas are handed ");
+	print_text("out, but it is cut short by by rapid fire laser bursts from the high spirited ");
+	print_text("graduating class. You are free to return to your barracks to wait, trained ");
+	print_text("and fully qualified, for your next mission. You also get that cherished ");
+	print_text("promotion from the Illuminati secret society. \n\nIn a week you receive a ");
+	print_text("detailed Training Course bill totaling 1,523 credits.\n\n");
 	print_text("			THE END\n");
+        
 	return 0;
 }
 
 int page56()
 {
-	print_text("That familiar strange feeling of deja\'vu envelops you again.  It is hard to ");
+	print_text("That familiar strange feeling of deja\'vu envelops you again. \n\nIt is hard to ");
 	print_text("say, but whatever is on the other side of the door does not seem to be intended ");
 	print_text("for you.\n");
         
@@ -1216,7 +1253,7 @@ int page56()
 
 int page57()
 {
-	print_text("In the centre of the room is a table and a single chair.  There is an Orange ");
+	print_text("In the center of the room is a table and a single chair. \n\nThere is an Orange ");
 	print_text("folder on the table top, but you can\'t make out the lettering on it.\n");
         
 	return choose(11, "You sit down and read the folder", 12, "You leave the room");
@@ -1224,7 +1261,6 @@ int page57()
 
 int next_page(int this_page)
 {
-	print_text("\n");
 	switch (this_page)
 	{
 	case  0 : return 0;
