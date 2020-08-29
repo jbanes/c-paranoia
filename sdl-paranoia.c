@@ -192,7 +192,7 @@ void character()
     print_text("=====================================================\n");
     sprintf(player, "The Character : Philo-R-DMD %d\n", clone);
     print_text(player);
-    print_text("Primary Attributes                      Secondary Attributes\n");
+    print_text("Primary Attributes        Secondary Attributes\n");
     print_text("=====================================================\n");
     print_text("Strength ............ 13  Carrying Capacity ...... 30\n");
     print_text("Endurance ........... 13  Damage Bonus ............ 0\n");
@@ -209,9 +209,8 @@ void character()
     print_text("Weapon: laser pistol; to hit, 40%%; type, L; \n");
     print_text("        Range, 50m; Reload, 6r; Malfnt, 00\n");
     print_text("Skills: Basics 1(20%), Aimed Weapon Combat 2(35%),\n");
-    print_text("        Laser 3(40%%),\n");
-    print_text("Personal Development 1(20%), Communications 2(29%),\n");
-    print_text("Intimidation 3(34%)\n");
+    print_text("        Laser 3(40%%), Personal Development 1(20%), \n");
+    print_text("        Communications 2(29%), Intimidation 3(34%)\n");
     print_text("Equipment: Red Reflec Armour, Laser Pistol,\n");
     print_text("           Laser Barrel (red), Notebook & Stylus,\n");
     print_text("           Knife, Com Unit 1, Jump suit, Secret \n");
@@ -551,7 +550,6 @@ int page15()
 	print_text("dolls are the neatest thing.  This one\'s got moveable arms and when you ");
 	print_text("squeeze him, his little rifle squirts realistic looking napalm.  It\'s only ");
 	print_text("50 credits.  Oh yeah, Merry Christmas.\"\n");
-        more();
         
         return choose3(16, "You decide to buy the doll.", 17, "You shoot the robot.", 22, "You ignore the robot and keep searching the hall.");
 }
@@ -572,46 +570,65 @@ int page16()
 
 int page17()
 {
-	int i, robot_hp=15;
-	print_text("You whip out your laser and shoot the robot, but not before it squeezes the ");
-	print_text("toy at you.  The squeeze toy has the same effect as a cone rifle firing napalm, ");
-	print_text("and the elfbot\'s armour has no effect against your laser.\n\n");
-        
-	for(i=0;i<2;i++)
-	{
-		if(dice_roll(1,100)<=25)
-		{
-			print_text("You have been hit!\n\n");
-			hit_points-= dice_roll(1,10);
-			if (hit_points<=0)	return new_clone(45);
-		}
-		else	print_text("It missed you, but not by much!\n\n");
-		if(dice_roll(1,100)<=40)
-		{
-			print_text("You zapped the little bastard!\n\n");
-			robot_hp-= dice_roll(2,10);
-			if (robot_hp<=0)
-			{
-				print_text("You wasted it! Good shooting!\n\n");
-				print_text("You will need more evidence, so you search GDH7-beta further ");
-				if (hit_points<10) print_text("after the GDH medbot has patched you up.\n");
-				hit_points=10;
-				return 22;
-			}
-		}
-		else	print_text("Damn! You missed!\n");
-	};
-        
-	print_text("It tried to fire again, but the toy exploded and demolished it.\n\n");
-	print_text("You will need more evidence, so you search GDH7-beta further ");
-        
-	if (hit_points<10) print_text("after the GDH medbot has patched you up.\n");
-	
-        hit_points=10;
-        
-        more();
-	
-        return 22;
+    int i, robot_hp = 15;
+    
+    print_text("You whip out your laser and shoot the robot, but not before it squeezes the ");
+    print_text("toy at you.  The squeeze toy has the same effect as a cone rifle firing napalm, ");
+    print_text("and the elfbot\'s armour has no effect against your laser.\n\n");
+
+    for(i=0;i<2;i++)
+    {
+        if(dice_roll(1,100)<=25)
+        {
+            print_text("You have been hit!\n\n");
+            
+            hit_points-= dice_roll(1,10);
+
+            if(hit_points <= 0)
+            {
+                more();
+                return new_clone(45);
+            }
+        }
+        else 
+        {
+            print_text("It missed you, but not by much!\n\n");
+        }
+
+        if(dice_roll(1,100) <= 40)
+        {
+            print_text("You zapped the little bastard!\n\n");
+
+            robot_hp-= dice_roll(2,10);
+
+            if(robot_hp <= 0)
+            {
+                print_text("You wasted it! Good shooting!\n\n");
+                print_text("You will need more evidence, so you search GDH7-beta further ");
+                if (hit_points<10) print_text("after the GDH medbot has patched you up.\n");
+                hit_points=10;
+
+                more();
+
+                return 22;
+            }
+        }
+        else 
+        {
+            print_text("Damn! You missed!\n");
+        }
+    };
+
+    print_text("It tried to fire again, but the toy exploded and demolished it.\n\n");
+    print_text("You will need more evidence, so you search GDH7-beta further ");
+
+    if (hit_points < 10) print_text("after the GDH medbot has patched you up.\n");
+
+    hit_points = 10;
+
+    more();
+
+    return 22;
 }
 
 int page18()
