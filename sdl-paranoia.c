@@ -704,22 +704,22 @@ int page21()
 
 int page22()
 {
-    	cursor.y = 12 * 8;
-        cursor.x = 14 * 6;
-	print_text("You are searching Goods");
-        
-    	cursor.y = 13 * 8 + 2;
-        cursor.x = 14 * 6;
-	print_text("Distribution Hall 7-beta.");
-        more();
-        
-	switch(dice_roll(1,4))
-	{
-		case 1:	return 18;
-		case 2: return 15;
-		case 3: return 18;
-		case 4: return 29;
-	}
+    cursor.y = 12 * 8;
+    cursor.x = 14 * 6;
+    print_text("You are searching Goods");
+
+    cursor.y = 13 * 8 + 2;
+    cursor.x = 14 * 6 - 2;
+    print_text("Distribution Hall 7-beta");
+    more();
+
+    switch(dice_roll(1,4))
+    {
+        case 1:	return 18;
+        case 2: return 15;
+        case 3: return 18;
+        case 4: return 29;
+    }
 }
 
 int page23()
@@ -1008,50 +1008,55 @@ int page40()
 
 int page41()
 {
-	print_text("You stumble down the hallway of the Troubleshooter Training Course looking for\n");
-	print_text("your next class.  Up ahead you see one of the instructors waving to you.  When\n");
-	print_text("you get there he shakes your hand and says, \"I am Jung-I-PSY.  Welcome to the\n");
-	print_text("secret society infiltration seminar.  I hope you ...\"  You don\'t catch the\n");
-	print_text("rest of his greeting because you\'re paying too much attention to his handshake;\n");
-	print_text("it is the strangest thing that has ever been done to your hand, sort of how it\n");
-	print_text("would feel if you put a neuro whip in a high energy palm massage unit.\n");
-	print_text("It doesn\'t take you long to learn what he is up to; you feel him briefly shake\n");
+	print_text("You stumble down the hallway of the Troubleshooter Training Course looking for ");
+	print_text("your next class.  Up ahead you see one of the instructors waving to you.  When ");
+	print_text("you get there he shakes your hand and says, \"I am Jung-I-PSY.  Welcome to the ");
+	print_text("secret society infiltration seminar.  I hope you ...\"\n\n");
+	print_text("You don\'t catch the rest of his greeting because you\'re paying too much attention to his handshake; ");
+	print_text("it is the strangest thing that has ever been done to your hand, sort of how it ");
+	print_text("would feel if you put a neuro whip in a high energy palm massage unit.\n\n");
+        more();
+	print_text("It doesn\'t take you long to learn what he is up to; you feel him briefly shake ");
 	print_text("your hand with the secret Illuminati handshake.\n");
-	return choose(42,"You respond with the proper Illuminati code phrase, \"Ewige Blumenkraft\"",43,"You ignore this secret society contact");
+        
+	return choose(42, "You respond with the proper Illuminati code phrase, \"Ewige Blumenkraft\"", 43, "You ignore this secret society contact");
 }
 
 int page42()
 {
-	print_text("\"Aha, so you are a member of the elitist Illuminati secret society,\" he says\n");
-	print_text("loudly, \"that is most interesting.\"  He turns to the large class already\n");
-	print_text("seated in the auditorium and says, \"You see, class, by simply using the correct\n");
-	print_text("hand shake you can identify the member of any secret society.  Please keep your\n");
+	print_text("\"Aha, so you are a member of the elitist Illuminati secret society,\" he says ");
+	print_text("loudly, \"that is most interesting.\"\n\n");
+	print_text("He turns to the large class already ");
+	print_text("seated in the auditorium and says, \"You see, class, by simply using the correct ");
+	print_text("hand shake you can identify the member of any secret society.  Please keep your ");
 	print_text("weapons trained on him while I call a guard.\n");
-	return choose(51,"You run for it",52,"You wait for the guard");
+        
+	return choose(51, "You run for it", 52, "You wait for the guard");
 }
 
 int page43()
 {
-	print_text("You sit through a long lecture on how to recognise and infiltrate secret\n");
-	print_text("societies, with an emphasis on mimicking secret handshakes.  The basic theory,\n");
-	print_text("which you realise to be sound from your Iluminati training, is that with the\n");
-	print_text("proper handshake you can pass unnoticed in any secret society gathering.\n");
-	print_text("What\'s more, the proper handshake will open doors faster than an \'ultra shock\'\n");
-	print_text("plasma cannon.  You are certain that with the information you learn here you\n");
-	print_text("will easily be promoted to the next level of your Illuminati secret society.\n");
-	print_text("The lecture continues for three hours, during which you have the opportunity\n");
-	print_text("to practice many different handshakes.  Afterwards everyone is directed to\n");
-	print_text("attend the graduation ceremony.  Before you must go you have a little time to\n");
+	print_text("You sit through a long lecture on how to recognize and infiltrate secret ");
+	print_text("societies, with an emphasis on mimicking secret handshakes.  The basic theory, ");
+	print_text("which you realize to be sound from your Iluminati training, is that with the ");
+	print_text("proper handshake you can pass unnoticed in any secret society gathering.\n\n");
+	print_text("What\'s more, the proper handshake will open doors faster than an \'ultra shock\' ");
+	print_text("plasma cannon.  You are certain that with the information you learn here you ");
+	print_text("will easily be promoted to the next level of your Illuminati secret society.\n\n");
+	print_text("The lecture continues for three hours, during which you have the opportunity ");
+	print_text("to practice many different handshakes.  Afterwards everyone is directed to ");
+	print_text("attend the graduation ceremony.\n\nBefore you must go you have a little time to ");
 	print_text("talk to The Computer about, you know, certain topics.\n");
-	return choose(44,"You go looking for a computer terminal",55,"You go to the graduation ceremony immediately");
+        
+	return choose(44, "You go looking for a computer terminal", 55, "You go to the graduation ceremony immediately");
 }
 
 int page44()
 {
-	print_text("You walk down to a semi-secluded part of the training course complex and\n");
-	print_text("activate a computer terminal.  \"AT YOUR SERVICE\" reads the computer screen.\n");
+	print_text("You walk down to a semi-secluded part of the training course complex and ");
+	print_text("activate a computer terminal. \"AT YOUR SERVICE\" reads the computer screen.\n");
 
-	if(read_letter==0) return choose(23,"You register yourself as a mutant",55,"You change your mind and go to the graduation ceremony");
+	if(read_letter == 0) return choose(23, "You register yourself as a mutant", 55, "You change your mind and go to the graduation ceremony");
         
         return choose3(
                 23, "You register yourself as a mutant.", 
@@ -1062,15 +1067,15 @@ int page44()
 
 int page45()
 {
-	print_text("\"Hrank Hrank,\" snorts the alarm in your living quarters.  Something is up.\n");
-	print_text("You look at the monitor above the bathroom mirror and see the message you have\n");
-	print_text("been waiting for all these years.  \"ATTENTION TROUBLESHOOTER, YOU ARE BEING\n");
-	print_text("ACTIVATED. PLEASE REPORT IMMEDIATELY TO MISSION ASSIGNMENT ROOM A17/GAMMA/LB22.\n");
-	print_text("THANK YOU. THE COMPUTER IS YOUR FRIEND.\"  When you arrive at mission\n");
-	print_text("assignment room A17-gamma/LB22 you are given your previous clone\'s\n");
-	print_text("remaining possessions and notebook.  You puzzle through your predecessor\'s\n");
-	print_text("cryptic notes, managing to decipher enough to lead you to the tube station and\n");
-	print_text("the tube car to GDH7-beta.\n");
+	print_text("\"Hrank Hrank,\" snorts the alarm in your living quarters.\n\nSomething is up.\n\n");
+	print_text("You look at the monitor above the bathroom mirror and see the message you have ");
+	print_text("been waiting for all these years.\n\n \"ATTENTION TROUBLESHOOTER, YOU ARE BEING ");
+	print_text("ACTIVATED. PLEASE REPORT IMMEDIATELY TO MISSION ASSIGNMENT ROOM A17/GAMMA/LB22. ");
+	print_text("THANK YOU. THE COMPUTER IS YOUR FRIEND.\"\n\nWhen you arrive at mission ");
+	print_text("assignment room A17-gamma/LB22 you are given your previous clone\'s ");
+	print_text("remaining possessions and notebook.  You puzzle through your predecessor\'s ");
+	print_text("cryptic notes, managing to decipher enough to lead you to the tube station and ");
+	print_text("the tube car to GDH7-beta.");
         more();
         
 	return 10;
@@ -1078,18 +1083,19 @@ int page45()
 
 int page46()
 {
-	print_text("\"Why do you ask about the communists, Troubleshooter?  It is not in the\n");
-	print_text("interest of your continued survival to be asking about such topics,\" says\n");
+	print_text("\"Why do you ask about the communists, Troubleshooter?  It is not in the ");
+	print_text("interest of your continued survival to be asking about such topics,\" says ");
 	print_text("The Computer.\n");
-	return choose(53,"You insist on talking about the communists",54,"You change the subject");
+        
+	return choose(53, "You insist on talking about the communists", 54, "You change the subject");
 }
 
 int page47()
 {
-	print_text("The Computer orders the entire Vulture squadron to terminate the Troubleshooter\n");
-	print_text("Training Course.  Unfortunately you too are terminated for possessing\n");
+	print_text("The Computer orders the entire Vulture squadron to terminate the Troubleshooter ");
+	print_text("Training Course.  Unfortunately you too are terminated for possessing ");
 	print_text("classified information.\n\n");
-	print_text("Don\'t act so innocent, we both know that you are an Illuminatus which is in\n");
+	print_text("Don\'t act so innocent, we both know that you are an Illuminatus which is in ");
 	print_text("itself an act of treason.\n\n");
 	print_text("Don\'t look to me for sympathy.\n\n");
 	print_text("			THE END\n");
