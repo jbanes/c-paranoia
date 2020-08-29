@@ -206,10 +206,10 @@ void character()
     print_text("Secret Society: Illuminati               Credits: 160\n");
     print_text("Secret Society Rank: 1      Service Group: Power Svcs\n");
     print_text("Mutant Power: Precognition\n");
-    print_text("Weapon: laser pistol; to hit, 40%%; type, L; \n");
+    print_text("Weapon: laser pistol; to hit, 40%; type, L; \n");
     print_text("        Range, 50m; Reload, 6r; Malfnt, 00\n");
     print_text("Skills: Basics 1(20%), Aimed Weapon Combat 2(35%),\n");
-    print_text("        Laser 3(40%%), Personal Development 1(20%), \n");
+    print_text("        Laser 3(40%), Personal Development 1(20%), \n");
     print_text("        Communications 2(29%), Intimidation 3(34%)\n");
     print_text("Equipment: Red Reflec Armour, Laser Pistol,\n");
     print_text("           Laser Barrel (red), Notebook & Stylus,\n");
@@ -605,7 +605,9 @@ int page17()
             {
                 print_text("You wasted it! Good shooting!\n\n");
                 print_text("You will need more evidence, so you search GDH7-beta further ");
-                if (hit_points<10) print_text("after the GDH medbot has patched you up.\n");
+                
+                if(hit_points < 10) print_text("after the GDH medbot has patched you up.\n");
+                
                 hit_points=10;
 
                 more();
@@ -638,40 +640,50 @@ int page18()
 	print_text("seen, a green multi armed mutant horror hulking 15 feet above your head. ");
 	print_text("Its skeletal body is draped with hundreds of metallic strips (probably to ");
 	print_text("negate the effects of some insidious mutant power), and the entire hideous ");
-	print_text("creature is wrapped in a thousand blinking hazard lights.  It\'s times like ");
-	print_text("this when you wish you\'d had some training for this job.  Luckily the ");
+	print_text("creature is wrapped in a thousand blinking hazard lights.\n\n");
+	print_text("It\'s times like this when you wish you\'d had some training for this job.  Luckily the ");
 	print_text("creature doesn\'t take notice of you but stands unmoving, as though waiting for ");
 	print_text("a summons from its dark lord, the Master Retailer.\n\n");
 	print_text("WHAM, suddenly you are struck from behind.\n");
         more();
         
-	if (dice_roll(2,10)<AGILITY)	return 19;
+	if(dice_roll(2,10) < AGILITY)	return 19;
 	else				return 20;
 }
 
 int page19()
 {
 	print_text("Quickly you regain your balance, whirl and fire your laser into the Ultraviolet ");
-	print_text("citizen behind you.  For a moment your heart leaps to your throat, then you ");
-	print_text("realise that he is indeed dead and you will be the only one filing a report on ");
-	print_text("this incident.  Besides, he was participating in this traitorous Christmas ");
-	print_text("shopping, as is evident from the rain of shoddy toys falling all around you. ");
+	print_text("citizen behind you. For a moment your heart leaps to your throat, then you ");
+	print_text("realize that he is indeed dead and you will be the only one filing a report on ");
+	print_text("this incident.\n\n");
+	print_text("Besides, he was participating in this traitorous Christmas ");
+	print_text("shopping, as is evident from the rain of shoddy toys falling all around you.\n\n");
 	print_text("Another valorous deed done in the service of The Computer!\n\n");
-        more();
         
-	if (++killer_count>(MAXKILL-clone))	return 21;
-	if (read_letter==1)	return 22;
+	if(++killer_count > (MAXKILL-clone))
+        {
+            more();
+            return 21;
+        }
         
-	return choose(34,"You search the body, keeping an eye open for Internal Security",22,"You run away like the cowardly dog you are");
+	if(read_letter==1)
+        {
+            more();
+            return 22;
+        }
+        
+	return choose(34, "You search the body, keeping an eye open for Internal Security", 22, "You run away like the cowardly dog you are");
 }
 
 int page20()
 {
-	print_text("Oh no! you can\'t keep your balance.  You\'re falling, falling head first into ");
-	print_text("the Christmas beast\'s gaping maw.  It\'s a valiant struggle; you think you are ");
+	print_text("Oh no! you can\'t keep your balance. You\'re falling, falling head first into ");
+	print_text("the Christmas beast\'s gaping maw. It\'s a valiant struggle; you think you are ");
 	print_text("gone when its poisonous needles dig into your flesh, but with a heroic effort ");
 	print_text("you jerk a string of lights free and jam the live wires into the creature\'s ");
-	print_text("spine.  The Christmas beast topples to the ground and begins to burn, filling ");
+	print_text("spine.\n\n");
+	print_text("The Christmas beast topples to the ground and begins to burn, filling ");
 	print_text("the area with a thick acrid smoke.  It takes only a moment to compose yourself, ");
 	print_text("and then you are ready to continue your search for the Master Retailer.\n");
         more();
