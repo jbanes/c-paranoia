@@ -32,6 +32,8 @@ uint16_t renderer_font_width(char* string);
 uint16_t renderer_font_height();
 void renderer_font_print(gfx_cursor* cursor, char* inString);
 void renderer_fill_rect(int16_t x, int16_t y, int16_t width, int16_t height, uint8_t red, uint8_t green, uint8_t blue);
+int renderer_save_tga(const char* path, gfx_texture* texture);
+void renderer_screenshot();
 void renderer_release();
 
 

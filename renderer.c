@@ -273,6 +273,84 @@ void renderer_fill_rect(int16_t x, int16_t y, int16_t width, int16_t height, uin
     }
 }
 
+int renderer_save_tga(const char* path, gfx_texture* texture) 
+{
+    if((path == NULL) || (texture == NULL) || (texture->address == NULL)) return 0;
+    
+    FILE* file = fopen(path, "wb");
+
+    uint8_t  tga_ident_size = 0;
+    uint8_t  tga_color_map_type = 0;
+    uint8_t  tga_image_type = 2;
+    uint16_t tga_color_map_start = 0;
+    uint16_t tga_color_map_length = 0;
+    uint8_t  tga_color_map_bpp = 0;
+    uint16_t tga_origin_x = 0;
+    uint16_t tga_origin_y = 0;
+    int16_t  tga_width = texture->width;
+    int16_t  tga_height = texture->height;
+    uint8_t  tga_bpp = 24;
+    uint8_t  tga_descriptor = 0x20;
+    
+    uintptr_t i;
+    uint8_t color[3];
+    uint16_t* buffer = (uint16_t*)texture->address;
+    
+    if(file == NULL) return 0;
+
+    fwrite(&tga_ident_size, 1, 1, file);
+    fwrite(&tga_color_map_type, 1, 1, file);
+    fwrite(&tga_image_type, 1, 1, file);
+    fwrite(&tga_color_map_start, 2, 1, file);
+    fwrite(&tga_color_map_length, 2, 1, file);
+    fwrite(&tga_color_map_bpp, 1, 1, file);
+    fwrite(&tga_origin_x, 2, 1, file);
+    fwrite(&tga_origin_y, 2, 1, file);
+    fwrite(&tga_width, 2, 1, file);
+    fwrite(&tga_height, 2, 1, file);
+    fwrite(&tga_bpp, 1, 1, file);
+    fwrite(&tga_descriptor, 1, 1, file);
+
+    for(i = 0; i < (tga_width * tga_height); i++) 
+    {
+        color[0]  = ((buffer[i] >> 8) & 0xF8);
+        color[0] |= (color[0] >> 5);
+        color[1]  = ((buffer[i] >> 3) & 0xFC);
+        color[1] |= (color[1] >> 6);
+        color[2]  = ((buffer[i] << 3) & 0xF8);
+        color[2] |= (color[2] >> 5);
+        
+        fwrite(&color[2], 1, 1, file);
+        fwrite(&color[1], 1, 1, file);
+        fwrite(&color[0], 1, 1, file);
+    }
+    
+    fclose(file);
+
+    return 1;
+}
+
+void renderer_screenshot()
+{
+    char path[256];
+    unsigned long int number = 0;
+    FILE* file;
+    
+    while(1) 
+    {
+        sprintf(path, "%s/screenshot%lu.tga", getenv("HOME"), number);
+        
+        file = fopen(path, "rb");
+        
+        if(file == NULL) break;
+        
+        fclose(file);
+        number++;
+    }
+    
+    renderer_save_tga(path, gfx_render_target);
+}
+
 void renderer_release() 
 {
     SDL_FreeSurface(screen);

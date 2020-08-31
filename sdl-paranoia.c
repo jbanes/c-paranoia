@@ -84,8 +84,15 @@ char get_char()
     {
         while(!SDL_PollEvent(&event)); // Wait for keypress
 
-        if(event.type != SDL_KEYDOWN) continue; // Wait for they key to be released
+        if(event.type != SDL_KEYDOWN) continue; // Wait for they key to be pressed
 
+#ifdef ENABLE_SCREENSHOT
+        if(event.key.keysym.sym == SDLK_BACKSPACE)
+        {
+            renderer_screenshot();
+        }
+#endif
+        
         if(event.key.keysym.sym == SDLK_ESCAPE)
         {
             renderer_release();
