@@ -150,7 +150,7 @@ int new_clone(int resume)
 {
     char text[512];
     
-    sprintf(text, "\nClone %d just died.\n", clone);
+    sprintf(text, "\nClone %d just died.\n\n", clone);
     print_text(text);
 
     if(++clone>6)
@@ -262,7 +262,10 @@ int choose(int a, char *aptr, int b, char *bptr)
 
     while(1)
     {
-        print_text("\nSelect \'A\' or \'B\' :\n");
+        renderer_fill_rect(0, cursor.y + 4, display_width, 1, 0x88, 0x88, 0x88);
+        
+        cursor.y += 7;
+        
         sprintf(choices, " A - %s.\n B - %s.", aptr, bptr);
         print_text(choices);
 
@@ -293,7 +296,10 @@ int choose3(int a, char *aptr, int b, char *bptr, int y, char *yptr)
     
     while(1)
     {
-        print_text("\nSelect \'A\', \'B\' or \'Y\' :\n");
+        renderer_fill_rect(0, cursor.y + 4, display_width, 1, 0x88, 0x88, 0x88);
+        
+        cursor.y += 7;
+        
         sprintf(choices, " A - %s.\n B - %s.\n Y - %s.", aptr, bptr, yptr);
         print_text(choices);
 
@@ -408,11 +414,12 @@ int page7()
 	print_text("Breach alarms howl all around you. You run headlong down the corridor and ");
 	print_text("desperately windmill around a corner, only to collide with a squad of 12 Blue ");
 	print_text("clearance Vulture squadron soldiers. \"Stop, Slime Face,\" shouts the ");
-	print_text("commander, \"or there won\'t be enough of you left for a tissue sample.\" ");
+	print_text("commander, \"or there won\'t be enough of you left for a tissue sample.\"\n\n");
 	print_text("\"All right, soldiers, stuff the greasy traitor into the uniform,\" he orders, ");
 	print_text("waving the business end of his blue laser scant inches from your nose. ");
 	print_text("With his other hand he shakes open a white bundle to reveal a pristine new ");
 	print_text("Ultraviolet citizen's uniform.\n\n");
+        more();
 	print_text("One of the Vulture squadron Troubleshooters grabs you by the neck in the ");
 	print_text("exotic and very painful Vulture Clamp(tm) death grip (you saw a special about ");
 	print_text("it on the Teela O\'Malley show), while the rest tear off your clothes and ");
@@ -421,6 +428,7 @@ int page7()
 	print_text("\"Thank you for your cooperation, sir,\" says the steely eyed leader of the ");
 	print_text("Vulture Squad. \"We will be going about our business now.\" With perfect ");
 	print_text("timing the Vultures wheel smartly and goosestep down the corridor.\n\n");
+        more();
 	print_text("Special Note: don\'t make the mistake of assuming that your skills have ");
 	print_text("improved any because of the uniform; you\'re only a Red Troubleshooter ");
 	print_text("traitorously posing as an Ultraviolet, and don\'t you forget it!\n\n");
@@ -867,7 +875,7 @@ int page29()
         
         return choose3(
                 30, "You pay the 30 credits for the info.", 
-                31, "You would rather threaten him for the information.", 
+                31, "You would rather threaten him for the\n     information.", 
                 22, "You ignore him and walk away.");
 }
 
@@ -882,14 +890,16 @@ int page30()
 	print_text("buckled toward you in a manner you only saw once before when you were field ");
 	print_text("testing the rocket assist plasma slingshot (you found it easily portable but ");
 	print_text("prone to misfire).  Luckily it isn\'t buckled too far for you to make out the ");
-	print_text("warning sign. \n\nWARNING!! Don\'t open this door or the same thing will happen to ");
+	print_text("warning sign. \n\n");
+        more();
+        print_text("WARNING!! Don\'t open this door or the same thing will happen to ");
 	print_text("you.  Opening this door is a capital offense.  Do not do it.  Not at all. This ");
 	print_text("is not a joke.\n");
         
         return choose3(
-                56, "You use your Precognition mutant power on\n     opening the door.", 
-                33, "You just go through the door anyway.", 
-                22, "You decide it\'s too dangerous and walk away.");
+                56, "You use your Precognition mutant power on\n     opening the door", 
+                33, "You just go through the door anyway", 
+                22, "You decide it\'s too dangerous and walk away");
 }
 
 int page31()
@@ -983,6 +993,7 @@ int page35()
 	print_text("\"Too late you capitalist swine, the people\'s revolutionary strike force claims ");
 	print_text("this cannon for the proletariat\'s valiant struggle against oppression.  Take ");
 	print_text("that, you running dog imperialist lackey.  ZAP, KAPOW\"\n\n");
+        more();
 	print_text("Just when you think that things couldn\'t get worse, \"Aha, look what we have ");
 	print_text("here, the Master Retailer himself with his head caught in his own cannon.  His ");
 	print_text("death will serve as a symbol of freedom for all Alpha Complex.\n\n");
@@ -1020,7 +1031,9 @@ int page37()
 	print_text("Christmas assignment was a test mission to assess your current level of ");
 	print_text("training.  You didn\'t do so well.  We\'re going to start at the beginning with ");
 	print_text("the other student.  Ah, here we are, the mutant identification and elimination ");
-	print_text("lecture.\"  \n\nHe shows you into a vast lecture hall filled with empty seats. ");
+	print_text("lecture.\"\n\n");
+        more();
+        print_text("He shows you into a vast lecture hall filled with empty seats. ");
 	print_text("There is only one other student here, a Troubleshooter near the front row ");
 	print_text("playing with his Action Troubleshooter(tm) figure. \n\n\"Find a seat and I will ");
 	print_text("begin,\" says the instructor.");
@@ -1054,7 +1067,7 @@ int page38()
     
     return choose(
             39, "You volunteer for the test", 
-            40, "You duck behind a chair and hope the instructor\n     doesn\'t notice you");
+            40, "You duck behind a chair and hope the\n     instructor doesn\'t notice you");
 }
 
 int page39()
@@ -1316,24 +1329,26 @@ int page55()
     clear();
     
     print_text("You and 300 other excited graduates are marched from the lecture hall and into ");
-    print_text("a large auditorium for the graduation exercise. The auditorium is ");
+    print_text("a large auditorium for the graduation exercise. \n\nThe auditorium is ");
     print_text("extravagantly decorated in the colours of the graduating class. Great red and ");
     print_text("green plasti-paper ribbons drape from the walls, while a huge sign reading\n\n");
     print_text("\"Congratulations class of GDH7-beta-203.44/A\" hangs from the raised stage down ");
     print_text("front. \n\nOnce everyone finds a seat the ceremony begins. Jung-I-PSY is the ");
     print_text("first to speak, \"Congratulations students, you have successfully survived the ");
-    print_text("Troubleshooter Training Course.  It always brings me great pride to address ");
+    print_text("Troubleshooter Training Course.\n\n");
+    more();
+    print_text("\"It always brings me great pride to address ");
     print_text("the graduating class, for I know, as I am sure you do too, that you are now ");
     print_text("qualified for the most perilous missions The Computer may select for you. The ");
     print_text("thanks is not owed to us of the teaching staff, but to all of you, who have ");
-    print_text("persevered and graduated.  Good luck and die trying.\"");
-    more();
+    print_text("persevered and graduated.  Good luck and die trying.\"\n\n");
     print_text("Then the instructor begins reading the names of the students who one by one walk to the front of ");
-    print_text("the auditorium and receive their diplomas. \n\nSoon it is your turn, ");
+    print_text("the auditorium and receive their diplomas. Soon it is your turn, ");
     print_text("\"Philo-R-DMD, graduating a master of mutant identification and secret society ");
     sprintf(clone_text, "infiltration.\" You walk up and receive your diploma from Plato-B-PHI%d, then ", plato_clone);
-    print_text(clone_text);
-    print_text("return to your seat. \n\nThere is another speech after the diplomas are handed ");
+    print_text("return to your seat. \n\n");
+    more();
+    print_text("There is another speech after the diplomas are handed ");
     print_text("out, but it is cut short by by rapid fire laser bursts from the high spirited ");
     print_text("graduating class. You are free to return to your barracks to wait, trained ");
     print_text("and fully qualified, for your next mission. You also get that cherished ");
