@@ -1,6 +1,6 @@
 # c-paranoia
 
-This is the old paranoia game that was written in C from the BSD games package.
+This is the old paranoia game that was written in C from the BSD games package, but updated for an SDL presentation on the RetroFW operating system. The design has also been converted to use the console controls rather than the original keyboard entries. 
 
 The original C source can be found here:
 
