@@ -19,21 +19,23 @@
 #define AGILITY	15
 #define MAXKILL  7	/* The maximum number of UV's you can kill */
 
-int clone=1;
-int page=1;
-int computer_request=0;
-int ultra_violet=0;
-int action_doll=0;
-int hit_points=10;
-int read_letter=0;
-int plato_clone=3;
-int blast_door=0;
-int killer_count=0;
+int intro = 1;
+int clone = 1;
+int page = 1;
+int computer_request = 0;
+int ultra_violet = 0;
+int action_doll = 0;
+int hit_points = 10;
+int read_letter = 0;
+int plato_clone = 3;
+int blast_door = 0;
+int killer_count = 0;
 
 SDL_Surface* screen;
 
 gfx_cursor cursor;
 char gamePath[256];
+char *location = "HQ";
 
 char* gamePathInit(const char* path) 
 {
@@ -69,7 +71,7 @@ void print_options(char *left, char *right)
    gfx_cursor left_cur = { 2, display_height - height - 2 };
    gfx_cursor right_cur = { display_width - width - 2, display_height - height - 2 };
    
-   renderer_fill_rect(0, display_height - height - 2, display_width, height + 2, 0);
+   renderer_fill_rect(0, display_height - height - 4, display_width, height + 4, 0xAA, 0x37, 0x00);
    renderer_font_print(&left_cur, left);
    renderer_font_print(&right_cur, right);
 }
@@ -102,15 +104,31 @@ char get_char()
 
 void clear()
 {
+    int height = renderer_font_height();
+    gfx_cursor title = {136 , 2};
+    char text[256];
+    
     cursor.x = 0;
-    cursor.y = 0;
+    cursor.y = renderer_font_height() + 8;
     
     renderer_clear(0, 0, 0);
+    renderer_fill_rect(0, 0, display_width, renderer_font_height() + 4, 0x00, 0x00, 0x66);
+    renderer_font_print(&title, "PARANOIA");
+    
+    if(intro) return;
+    
+    sprintf(text, "%s", (ultra_violet ? "Ultraviolet" : "Red"));
+    title.x = display_width - renderer_font_width(text) - 2;
+    renderer_font_print(&title, text);
+    
+    sprintf(text, "%s", location);
+    title.x = 2;
+    renderer_font_print(&title, text);
 }
 
 void more()
 {
-    print_options("Exit", "More...");
+    print_options("Exit (Select)", "More...");
         
 #ifdef DEBUG
     printf("(page %d)",page);
@@ -150,6 +168,7 @@ int new_clone(int resume)
         action_doll = 0;
         hit_points = 10;
         killer_count = 0;
+        location = "HQ";
         
         more();
         
@@ -159,8 +178,10 @@ int new_clone(int resume)
 
 int dice_roll(int number, int faces)
 {
-	int i,total=0;
-	for(i=number;i>0;i--)	total+= rand()%faces+1;
+	int i, total=0;
+        
+	for(i=number; i>0; i--) total += rand()%faces + 1;
+        
 	return total;
 }
 
@@ -177,10 +198,9 @@ void instructions()
 	print_text("  doing this until you win.\n\n");
 	print_text("  At times you will use a skill or engage in combat \n");
 	print_text("  and and will be informed of the outcome. These\n");
-	print_text("  sections will be self explanatory.\n\n");
+	print_text("  sections will be self explanatory.");
         more();
         
-        print_text("Welcome to Paranoia!\n\n\n");
 	print_text("HOW TO DIE:\n\n");
 	print_text("  As Philo-R-DMD you will die at times during the \n");
 	print_text("  adventure. When this happens you will be given \n");
@@ -200,7 +220,7 @@ void character()
     char player[40];
     
     print_text("=====================================================\n");
-    sprintf(player, "The Character : Philo-R-DMD %d\n", clone);
+    sprintf(player, "The Character : Philo-R-DMD %d\n\n", clone);
     print_text(player);
     print_text("Primary Attributes        Secondary Attributes\n");
     print_text("=====================================================\n");
@@ -212,6 +232,12 @@ void character()
     print_text("Chutzpah ............. 8  Comprehension Bonus ... +4%\n");
     print_text("Mechanical Aptitude . 14  Believability Bonus ... +5%\n");
     print_text("Power Index ......... 10  Repair Bonus .......... +5%\n");
+    print_text("=====================================================\n");
+    more();
+    
+    print_text("=====================================================\n");
+    sprintf(player, "The Character : Philo-R-DMD %d\n\n", clone);
+    print_text(player);
     print_text("=====================================================\n");
     print_text("Secret Society: Illuminati               Credits: 160\n");
     print_text("Secret Society Rank: 1      Service Group: Power Svcs\n");
@@ -237,23 +263,26 @@ int choose(int a, char *aptr, int b, char *bptr)
     while(1)
     {
         print_text("\nSelect \'A\' or \'B\' :\n");
-        sprintf(choices, " A - %s.\n B - %s.\n", aptr, bptr);
+        sprintf(choices, " A - %s.\n B - %s.", aptr, bptr);
         print_text(choices);
 
-        print_options("Exit", "Choose...");   
+        print_options("Exit (Select)", "Choose (A / B)");   
 
-        button = get_char();
-
-        if(button == 'X')
+        while(1)
         {
-            clear();
-            character();
-            more();
-            continue;
+            button = get_char();
+
+            if(button == 'X')
+            {
+                clear();
+                character();
+                more();
+                continue;
+            }
+
+            if(button == 'A') return a;
+            if(button == 'B') return b;
         }
-        
-        if(button == 'A') return a;
-        else return b;
     }
 }
 
@@ -265,10 +294,10 @@ int choose3(int a, char *aptr, int b, char *bptr, int y, char *yptr)
     while(1)
     {
         print_text("\nSelect \'A\', \'B\' or \'Y\' :\n");
-        sprintf(choices, " A - %s.\n B - %s.\n Y - %s.\n", aptr, bptr, yptr);
+        sprintf(choices, " A - %s.\n B - %s.\n Y - %s.", aptr, bptr, yptr);
         print_text(choices);
 
-        print_options("Exit", "Choose...");   
+        print_options("Exit (Select)", "Choose (A / B / Y)");   
 
         button = get_char();
 
@@ -284,20 +313,23 @@ int choose3(int a, char *aptr, int b, char *bptr, int y, char *yptr)
         {
             case 'A': return (a < 0) ? new_clone(-a) : a;
             case 'B': return b;
-            case 'Y':
-            default:  return y;
+            case 'Y': return y;
         }
     }
 }
 
 int page1()
 {
-	print_text("You wake up face down on the red and pink checked E-Z-Kleen linoleum floor.\n\n");
-	print_text("You recognize the pattern, it\'s the type preferred in the internal security briefing cells.\n\n");
-	print_text("When you finally look around you, you see that you are alone ");
-	print_text("in a large mission briefing room.\n");
-        more();
-	return 57;
+    print_text("You wake up face down on the red and pink checked E-Z-Kleen linoleum floor.\n\n");
+    print_text("You recognize the pattern, it\'s the type preferred in the internal security briefing cells.\n\n");
+    print_text("When you finally look around you, you see that you are alone ");
+    print_text("in a large mission briefing room.\n");
+    
+    intro = 0;
+    
+    more();
+    
+    return 57;
 }
 
 int page2()
@@ -572,6 +604,8 @@ int page14()
 	print_text("wearing a huge red synthetic flower.\n");
         more();
         
+        location = "GDH7-beta";
+        
 	return 22;
 }
 
@@ -582,15 +616,17 @@ int page15()
 	print_text("\"you done all your last minute Christmas shopping? I got some real neat junk ");
 	print_text("here. You don\'t wanna miss the big day tommorrow, if you know what I mean.\"\n\n");
 	print_text("The robot opens its bag to show you a pile of shoddy Troubleshooter dolls. It ");
-	print_text("reaches in and pulls out one of them. \"Look, these Action Troubleshooter(tm) ");
+	print_text("reaches in and pulls out one of them. \n\n");
+        more();
+	print_text("\"Look, these Action Troubleshooter(tm) ");
 	print_text("dolls are the neatest thing.  This one\'s got moveable arms and when you ");
 	print_text("squeeze him, his little rifle squirts realistic looking napalm.  It\'s only ");
 	print_text("50 credits. Oh yeah, Merry Christmas.\"\n");
         
         return choose3(
-                16, "You decide to buy the doll.", 
-                17, "You shoot the robot.", 
-                22, "You ignore the robot and keep searching.");
+                16, "You decide to buy the doll", 
+                17, "You shoot the robot", 
+                22, "You ignore the robot and keep searching");
 }
 
 int page16()
@@ -881,6 +917,8 @@ int page32()
 	print_text("7-beta and begin to search for the blast door.\n");
         more();
         
+        location = "GDH7-beta";
+        
 	return 22;
 }
 
@@ -895,7 +933,7 @@ int page33()
 	print_text("into the room.\n");
         more();
         
-	if (ultra_violet==1)	return 35;
+	if(ultra_violet == 1)	return 35;
 	else			return 36;
 }
 
@@ -987,6 +1025,8 @@ int page37()
 	print_text("playing with his Action Troubleshooter(tm) figure. \n\n\"Find a seat and I will ");
 	print_text("begin,\" says the instructor.");
         more();
+        
+        location = "Lecture Hall";
         
 	return 38;
 }
@@ -1272,33 +1312,36 @@ int page55()
 {
     char clone_text[256];
     
-	print_text("You and 300 other excited graduates are marched from the lecture hall and into ");
-	print_text("a large auditorium for the graduation exercise. The auditorium is ");
-	print_text("extravagantly decorated in the colours of the graduating class. Great red and ");
-	print_text("green plasti-paper ribbons drape from the walls, while a huge sign reading\n\n");
-	print_text("\"Congratulations class of GDH7-beta-203.44/A\" hangs from the raised stage down ");
-	print_text("front. \n\nOnce everyone finds a seat the ceremony begins. Jung-I-PSY is the ");
-	print_text("first to speak, \"Congratulations students, you have successfully survived the ");
-	print_text("Troubleshooter Training Course.  It always brings me great pride to address ");
-	print_text("the graduating class, for I know, as I am sure you do too, that you are now ");
-	print_text("qualified for the most perilous missions The Computer may select for you. The ");
-	print_text("thanks is not owed to us of the teaching staff, but to all of you, who have ");
-	print_text("persevered and graduated.  Good luck and die trying.\"");
-        more();
-	print_text("Then the instructor begins reading the names of the students who one by one walk to the front of ");
-	print_text("the auditorium and receive their diplomas. \n\nSoon it is your turn, ");
-	print_text("\"Philo-R-DMD, graduating a master of mutant identification and secret society ");
-	sprintf(clone_text, "infiltration.\" You walk up and receive your diploma from Plato-B-PHI%d, then ", plato_clone);
-	print_text(clone_text);
-	print_text("return to your seat. \n\nThere is another speech after the diplomas are handed ");
-	print_text("out, but it is cut short by by rapid fire laser bursts from the high spirited ");
-	print_text("graduating class. You are free to return to your barracks to wait, trained ");
-	print_text("and fully qualified, for your next mission. You also get that cherished ");
-	print_text("promotion from the Illuminati secret society. \n\nIn a week you receive a ");
-	print_text("detailed Training Course bill totaling 1,523 credits.\n\n");
-	print_text("			THE END\n");
-        
-	return 0;
+    intro = 1;
+    clear();
+    
+    print_text("You and 300 other excited graduates are marched from the lecture hall and into ");
+    print_text("a large auditorium for the graduation exercise. The auditorium is ");
+    print_text("extravagantly decorated in the colours of the graduating class. Great red and ");
+    print_text("green plasti-paper ribbons drape from the walls, while a huge sign reading\n\n");
+    print_text("\"Congratulations class of GDH7-beta-203.44/A\" hangs from the raised stage down ");
+    print_text("front. \n\nOnce everyone finds a seat the ceremony begins. Jung-I-PSY is the ");
+    print_text("first to speak, \"Congratulations students, you have successfully survived the ");
+    print_text("Troubleshooter Training Course.  It always brings me great pride to address ");
+    print_text("the graduating class, for I know, as I am sure you do too, that you are now ");
+    print_text("qualified for the most perilous missions The Computer may select for you. The ");
+    print_text("thanks is not owed to us of the teaching staff, but to all of you, who have ");
+    print_text("persevered and graduated.  Good luck and die trying.\"");
+    more();
+    print_text("Then the instructor begins reading the names of the students who one by one walk to the front of ");
+    print_text("the auditorium and receive their diplomas. \n\nSoon it is your turn, ");
+    print_text("\"Philo-R-DMD, graduating a master of mutant identification and secret society ");
+    sprintf(clone_text, "infiltration.\" You walk up and receive your diploma from Plato-B-PHI%d, then ", plato_clone);
+    print_text(clone_text);
+    print_text("return to your seat. \n\nThere is another speech after the diplomas are handed ");
+    print_text("out, but it is cut short by by rapid fire laser bursts from the high spirited ");
+    print_text("graduating class. You are free to return to your barracks to wait, trained ");
+    print_text("and fully qualified, for your next mission. You also get that cherished ");
+    print_text("promotion from the Illuminati secret society. \n\nIn a week you receive a ");
+    print_text("detailed Training Course bill totaling 1,523 credits.\n\n");
+    print_text("			THE END\n");
+
+    return 0;
 }
 
 int page56()
@@ -1397,10 +1440,8 @@ void main(int argc, char** argv)
     SDL_WM_SetCaption("Paranoia", "Paranoia");
     renderer_init(&gamePath);
     
-    cursor.x = 0;
-    cursor.y = 0;
-    
     srand(time(NULL));
+    clear();
     instructions();
     more();
     character();

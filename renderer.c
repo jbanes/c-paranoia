@@ -246,8 +246,9 @@ void renderer_font_print(gfx_cursor *cursor, char* inString)
     }
 }
 
-void renderer_fill_rect(int16_t x, int16_t y, int16_t width, int16_t height, gfx_color color) 
+void renderer_fill_rect(int16_t x, int16_t y, int16_t width, int16_t height, uint8_t red, uint8_t green, uint8_t blue) 
 {    
+    gfx_color color = renderer_color_rgb(red, green, blue);
     uint16_t* buffer = (uint16_t*)gfx_render_target->address;
     uintptr_t i, j;
     

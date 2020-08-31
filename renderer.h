@@ -31,7 +31,7 @@ void renderer_draw_texture(int16_t inX, int16_t inY, gfx_texture* texture);
 uint16_t renderer_font_width(char* string);
 uint16_t renderer_font_height();
 void renderer_font_print(gfx_cursor* cursor, char* inString);
-void renderer_fill_rect(int16_t x, int16_t y, int16_t width, int16_t height, gfx_color color);
+void renderer_fill_rect(int16_t x, int16_t y, int16_t width, int16_t height, uint8_t red, uint8_t green, uint8_t blue);
 void renderer_release();
 
 
