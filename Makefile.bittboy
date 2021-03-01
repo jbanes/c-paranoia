@@ -7,8 +7,8 @@ BINBASE = /opt/miyoo/bin/
 SYSROOT = $(shell $(CC) --print-sysroot)
 
 SDL_LIBS    := $(shell $(BINBASE)pkg-config --libs sdl)
-CFLAGS = -I$(SYSROOT)/usr/include/SDL -O2
-LDFLAGS = $(SDL_LIBS) -fcommon
+CFLAGS = -I$(SYSROOT)/usr/include/SDL -O2 -DBITTBOY
+LDFLAGS = $(SDL_LIBS)
 
 .c.o:
 	$(CC) $(CFLAGS) -c $< -o $@
