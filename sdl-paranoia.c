@@ -31,7 +31,7 @@ int plato_clone = 3;
 int blast_door = 0;
 int killer_count = 0;
 
-SDL_Surface* screen;
+extern SDL_Surface* screen;
 
 gfx_cursor cursor;
 char gamePath[256];
