@@ -31,7 +31,7 @@ int plato_clone = 3;
 int blast_door = 0;
 int killer_count = 0;
 
-SDL_Surface* screen;
+extern SDL_Surface* screen;
 
 gfx_cursor cursor;
 char gamePath[256];
@@ -100,10 +100,22 @@ char get_char()
             exit(0);
         }
 
+#if defined(RETROFW)
         if(event.key.keysym.sym == SDLK_LCTRL)  return 'A';
         if(event.key.keysym.sym == SDLK_LALT)   return 'B';
         if(event.key.keysym.sym == SDLK_SPACE)  return 'X';
         if(event.key.keysym.sym == SDLK_LSHIFT) return 'Y';
+#elif defined(BITTBOY)
+        if(event.key.keysym.sym == SDLK_LALT)    return 'A';
+        if(event.key.keysym.sym == SDLK_LCTRL)   return 'B';
+        if(event.key.keysym.sym == SDLK_LSHIFT)  return 'X';
+        if(event.key.keysym.sym == SDLK_SPACE)   return 'Y';
+#else
+        if(event.key.keysym.sym == SDLK_a)   return 'A';
+        if(event.key.keysym.sym == SDLK_b)   return 'B';
+        if(event.key.keysym.sym == SDLK_x)   return 'X';
+        if(event.key.keysym.sym == SDLK_y)   return 'Y';
+#endif
 
         // Didn't recognize the input
     }

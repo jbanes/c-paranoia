@@ -1,0 +1,20 @@
+PROG = paranoia
+OBJS = renderer.o sdl-paranoia.o
+
+ARCH = arm-linux-
+CC = $(ARCH)gcc
+BINBASE = /opt/miyoo/bin/
+SYSROOT = $(shell $(CC) --print-sysroot)
+
+SDL_LIBS    := $(shell $(BINBASE)pkg-config --libs sdl)
+CFLAGS = -I$(SYSROOT)/usr/include/SDL -O2 -DBITTBOY
+LDFLAGS = $(SDL_LIBS)
+
+.c.o:
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(PROG): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $(PROG)
+
+clean:
+	rm -f $(PROG) *.o

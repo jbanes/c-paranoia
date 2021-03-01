@@ -6,7 +6,7 @@ CC = $(ARCH)gcc
 
 SDL_CFLAGS  := $(shell sdl-config --cflags)
 SDL_LIBS    := $(shell sdl-config --libs)
-CFLAGS = $(SDL_CFLAGS) -O2
+CFLAGS = $(SDL_CFLAGS) -O2 -DRETROFW
 LDFLAGS = $(SDL_LIBS)
 
 
